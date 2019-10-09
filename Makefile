@@ -6,11 +6,11 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/10/09 14:38:42 by jules            ###   ########.fr        #
+#    Updated: 2019/10/09 15:11:45 by jules            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = GameEngine.a
+NAME = libGameEngine.a
 
 ## Colors ##
 PURPLE = [038;2;255;40;255
