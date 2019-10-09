@@ -1,0 +1,7 @@
+-I inc/
+-I lib/glad/
+-I lib/assimp-4.1.0/include/
+-I lib/glm/glm/
+-I lib/sdl2/include/SDL2/
+-I lib/sdl2_mixer/include/SDL2/
+-I lib/freetype-2.10.0/include/
