@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:28:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/27 14:41:30 by jloro            ###   ########.fr       */
+/*   Updated: 2019/10/11 14:27:12 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ class Model
 		virtual void	Draw(const std::shared_ptr<Shader>  shader);
 		void			PauseAnimation(void);
 		void			PlayAnimation(void);
-		void			AddAnimation(const char* path);
-		void			ChangeAnimation(unsigned int anim);
+		void			AddAnimation(const char* path, const char* name);
+		void			ChangeAnimation(std::string name);
         Model & operator=(const Model &rhs);
 		glm::vec3		GetMin(void) const;
 		glm::vec3		GetMax(void) const;
 		float			GetChrono() const;
-		unsigned int	GetCurrentAnimation() const;
-		const std::shared_ptr<Animation>	GetAnimation(unsigned int i) const;
+		std::string		GetCurrentAnimation() const;
+		const std::shared_ptr<Animation>	GetAnimation(std::string name);
 	protected:
 /*  protected variables    */
 		std::vector<Mesh>	_meshes;
@@ -55,7 +55,8 @@ class Model
 		std::map<std::string, unsigned int>			_boneMap;
 		std::vector<BoneInfo>	_boneInfo;
 		std::vector<std::shared_ptr<Animation>>	_animations;
-		unsigned int			_currentAnimation;
+		std::map<std::string, unsigned int>		_animationsName;
+		std::string				_currentAnimation;
 		float					_chrono;
 		std::shared_ptr<Node>	_skeleton;
 		glm::mat4				_globalTransform;

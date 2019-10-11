@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/27 14:40:59 by jloro            ###   ########.fr       */
+/*   Updated: 2019/10/11 14:55:09 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,19 @@ Model::Model(const Model &src)
 
 Model::~Model() {}
 
-void	Model::AddAnimation(const char* path)
+void	Model::AddAnimation(const char* path, const char * name)
 {
+	if (!_hasAnim)
+		_hasAnim = true;
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path, 0);
 	if (!scene || !scene->HasAnimations())
 		throw std::runtime_error(std::string("No animations"));
 
+	if (_animations.size() == 0)
+		_currentAnimation = name;
 	_animations.push_back(std::shared_ptr<Animation>(new Animation(scene->mAnimations[0])));
+	_animationsName[name] = _animations.size() - 1;
 }
 
 void	Model::Draw(const std::shared_ptr<Shader>  shader)
@@ -69,10 +74,10 @@ void	Model::PlayAnimation()
 	_playing = true;
 
 }
-void	Model::ChangeAnimation(unsigned int anim)
+void	Model::ChangeAnimation(std::string name)
 {
 	_chrono = 0;
-	_currentAnimation = anim;
+	_currentAnimation = name;
 }
 Model & Model::operator=(const Model &rhs)
 {
@@ -95,8 +100,9 @@ glm::mat4	aiMat4ToGlmMat4(aiMatrix4x4 from)
 glm::vec3	Model::GetMin(void) const { return _min; }
 glm::vec3	Model::GetMax(void) const { return _max; }
 float		Model::GetChrono(void) const { return _chrono; }
-unsigned int	Model::GetCurrentAnimation(void) const { return _currentAnimation; }
-const std::shared_ptr<Animation>	Model::GetAnimation(unsigned int i) const { return _animations[i]; }
+std::string	Model::GetCurrentAnimation(void) const { return _currentAnimation; }
+
+const std::shared_ptr<Animation>	Model::GetAnimation(std::string name) { return _animations[_animationsName[name]]; }
 
 void	Model::_LoadModel(std::string path)
 {
@@ -113,7 +119,7 @@ void	Model::_LoadModel(std::string path)
 		_skeleton.reset(new Node(_scene->mRootNode));
 		_animations.push_back(std::shared_ptr<Animation>(new Animation(_scene->mAnimations[0])));
 		_hasAnim = true;
-		_currentAnimation = 0;
+		_currentAnimation = "Default";
 	}
 
 	_globalTransform = aiMat4ToGlmMat4(_scene->mRootNode->mTransformation.Inverse());
@@ -133,9 +139,9 @@ void	Model::_ProcessNode(aiNode *node, const aiScene *scene)
 
 void	Model::_BoneTransform(float timeInSecond, const std::shared_ptr<Shader>  shader)
 {
-	float ticksPerSecond = _animations[_currentAnimation]->ticksPerSecond != 0 ? _animations[_currentAnimation]->ticksPerSecond : 25.0f;
+	float ticksPerSecond = _animations[_animationsName[_currentAnimation]]->ticksPerSecond != 0 ? _animations[_animationsName[_currentAnimation]]->ticksPerSecond : 25.0f;
 	float timeInTicks = timeInSecond * ticksPerSecond;
-	float animationTime = fmod(timeInTicks, _animations[_currentAnimation]->duration);
+	float animationTime = fmod(timeInTicks, _animations[_animationsName[_currentAnimation]]->duration);
 
 	_ReadNodeHierarchy(animationTime, _skeleton, glm::mat4(1.0f));
 
@@ -203,7 +209,7 @@ glm::quat	Model::_CalcInterpolatedRotation(float animationTime, std::shared_ptr<
 void	Model::_ReadNodeHierarchy(float animationTime, std::shared_ptr<Node> node, const glm::mat4 parentTransform)
 {
 	std::string nodeName = node->name;
-	std::shared_ptr<Animation> animation = _animations[_currentAnimation];
+	std::shared_ptr<Animation> animation = _animations[_animationsName[_currentAnimation]];
 	std::shared_ptr<NodeAnim> nodeAnim = FindNodeAnim(animation, nodeName);
 
 	glm::mat4	nodeTransform = node->transform;

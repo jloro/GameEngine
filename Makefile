@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/10/09 15:11:45 by jules            ###   ########.fr        #
+#    Updated: 2019/10/11 13:23:24 by jules            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -206,7 +206,7 @@ ASSIMP:
 		rm v$(ASSIMP_VER).tar.gz && \
 		mkdir -p $(ASSIMP_PATH) && \
 		cd assimp-$(ASSIMP_VER) && \
-			cmake . && \
+		cmake -DASSIMP_BUILD_TESTS:BOOL=OFF && \
 			make && \
 		cd ../.. && \
 		echo "\033$(GREEN)m✓\tassimp-$(ASSIMP_VER)installed !\033[0m"; \
