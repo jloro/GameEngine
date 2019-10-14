@@ -10,13 +10,7 @@ class AComponent;
 enum class eTags
 {
 	Default = 1 << 0,
-	Corner = 1 << 1,
-	Corridor = 1 << 2,
-	Player = 1 << 3,
-	CornerLeft = 1 << 4,
-	CornerRight = 1 << 5,
-	GameManager = 1 << 6,
-	Coin = 1 << 7,
+	Player = 1 << 1,
 };
 
 class GameObject
