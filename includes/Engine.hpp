@@ -51,6 +51,7 @@ namespace Engine42
 			static const Uint8     *GetKeyInput();
 			static eKeyState		GetKeyState(Uint8 scancode);
 			static bool             Destroy(ARenderer* renderer);
+			static bool             Destroy(GameObject *go);
 			static void             ReloadShaders(void);
 			static void             Clear(void);
 			void             ResizeWindow(int width, int height);

@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 11:31:23 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/27 14:41:17 by jloro            ###   ########.fr       */
+/*   Updated: 2019/10/14 12:16:19 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,3 +129,4 @@ void	Mesh::Draw(const std::shared_ptr<Shader>  shader) const
 }
 
 bool	Mesh::HasTexture() const { return _hasTexture; }
+void	Mesh::SetHasTexture(bool hasTexture) { _hasTexture = hasTexture; }

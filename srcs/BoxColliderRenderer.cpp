@@ -53,8 +53,8 @@ void	BoxColliderRenderer::Draw() const
 	if (_go->GetComponent<MeshRenderer>()->IsRender())
 	{
 		_shader->use();
-		_shader->setMat4("view", Camera::instance->GetMatView());
-		_shader->setMat4("projection", Camera::instance->GetMatProj());
+		_shader->setMat4("view", Camera::Instance()->GetMatView());
+		_shader->setMat4("projection", Camera::Instance()->GetMatProj());
 		_shader->setMat4("model", glm::scale(_transform->GetMatrix(), _collider->scale));
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		_mesh->Draw(_shader);

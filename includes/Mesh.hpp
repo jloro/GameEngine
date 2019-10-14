@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 11:23:36 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/27 11:36:54 by jloro            ###   ########.fr       */
+/*   Updated: 2019/10/14 12:15:46 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ class Mesh
 		void		SendToOpenGL(void);
 
 		bool		HasTexture() const;
+		void		SetHasTexture(bool hasTexture);
 	private:
 /*  private variables  */
 		GLuint						_vao;
