@@ -8,15 +8,19 @@ Engine42::Engine          Engine42::Engine::_inst = Engine();
 Engine42::Engine::Engine(void){
 	_skybox = nullptr;
 	_clear = false;
-	_keyboardKeys = {SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_B};
-	_InitKeyboard();
 	_tags["Default"] = 1 << 0;
 }
 
-void	Engine42::Engine::_InitKeyboard()
+void	Engine42::Engine::InitKeyboard()
 {
-	for (auto it = _keyboardKeys.begin(); it != _keyboardKeys.end(); it++)
-		_keyboard[*it] = KEY_UP;
+	_inst._keys = SDL_GetKeyboardState(NULL);
+	for (Uint8 i = 4; i <= 226; i++)
+	{
+		if (_inst._keys[i])
+			_inst._keyboard[i] = KEY_DOWN;
+		else
+			_inst._keyboard[i] = KEY_UP;
+	}
 }
 
 Engine42::Engine::~Engine(void){}
@@ -74,23 +78,23 @@ void            Engine42::Engine::ResizeWindow(int width, int height)
 	SdlWindow::GetMain()->SetHeight(height);
 	_fontUI->UpdateProj();
 }
-const SDL_Event &Engine42::Engine::GetEvent(){ return _inst._event;}
+std::list<const SDL_Event> Engine42::Engine::GetEvents(){ return _inst._events;}
 const Uint8 *Engine42::Engine::GetKeyInput(){ return _inst._keys;}
 
 eKeyState		Engine42::Engine::GetKeyState(Uint8 scancode) { return _inst._keyboard[scancode];}
 
 void	Engine42::Engine::_UpdateKeyboard()
 {
-	for (auto it = _keyboardKeys.begin(); it != _keyboardKeys.end(); it++)
+	for (Uint8 i = 4; i <= 226; i++)
 	{
-		if (_keys[*it] && _keyboard[*it] == KEY_UP)
-			_keyboard[*it] = KEY_PRESS;
-		else if (_keys[*it] && _keyboard[*it] == KEY_PRESS)
-			_keyboard[*it] = KEY_DOWN;
-		else if (!_keys[*it] && _keyboard[*it] == KEY_DOWN)
-			_keyboard[*it] = KEY_RELEASE;
-		else if (!_keys[*it] && _keyboard[*it] == KEY_RELEASE)
-			_keyboard[*it] = KEY_UP;
+		if (_keys[i] && _keyboard[i] == KEY_UP)
+			_keyboard[i] = KEY_PRESS;
+		else if (_keys[i] && _keyboard[i] == KEY_PRESS)
+			_keyboard[i] = KEY_DOWN;
+		else if (!_keys[i] && _keyboard[i] == KEY_DOWN)
+			_keyboard[i] = KEY_RELEASE;
+		else if (!_keys[i] && _keyboard[i] == KEY_RELEASE)
+			_keyboard[i] = KEY_UP;
 	}
 }
 
@@ -157,26 +161,29 @@ void            Engine42::Engine::Loop(void)
 	float       lastTime = delta;
 	const float fixedTimeUpdate = 0.02f;
 	float       fixedDelta = 0.02f;
+	SDL_Event	event;
 
 	//createFBO();
 	while (!quit)
 	{
 		delta = (((float)SDL_GetTicks()) / 1000) - lastTime;
 		Time::SetDeltaTime(delta);
-		_inst._event.type = SDL_USEREVENT;
-		while (SDL_PollEvent(&_inst._event) != 0)
+		_inst._events.clear();
+		event.type = SDL_USEREVENT;
+		while (SDL_PollEvent(&event) != 0)
 		{
-			if (Camera::Instance()->GetFreeFlight() && _inst._event.type == SDL_MOUSEMOTION)
-				Camera::Instance()->LookAround(_inst._event.motion.xrel, -_inst._event.motion.yrel);
-			if ((_inst._event.type == SDL_WINDOWEVENT 
-						&& _inst._event.window.event == SDL_WINDOWEVENT_CLOSE)
-					|| (_inst._event.type == SDL_KEYDOWN 
-						&& _inst._event.key.keysym.sym == SDLK_ESCAPE))
+			_inst._events.push_back(event);
+			if (Camera::Instance()->GetFreeFlight() && event.type == SDL_MOUSEMOTION)
+				Camera::Instance()->LookAround(event.motion.xrel, -event.motion.yrel);
+			if ((event.type == SDL_WINDOWEVENT 
+						&& event.window.event == SDL_WINDOWEVENT_CLOSE)
+					|| (event.type == SDL_KEYDOWN 
+						&& event.key.keysym.sym == SDLK_ESCAPE))
 				quit = true;
-			if (_inst._event.type == SDL_WINDOWEVENT && _inst._event.window.event == SDL_WINDOWEVENT_RESIZED)
-				_inst.ResizeWindow(_inst._event.window.data1, _inst._event.window.data2);
+			if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED)
+				_inst.ResizeWindow(event.window.data1, event.window.data2);
 		}
-		_inst._keys = SDL_GetKeyboardState(NULL);
+		SDL_PumpEvents();
 		_inst._UpdateKeyboard();
 		_inst._UpdateAll();
 		lastTime += delta;

@@ -47,7 +47,7 @@ namespace Engine42
 
 
 			static void            Loop(void);
-			static const SDL_Event &GetEvent();
+			static std::list<const SDL_Event> GetEvents();
 			static const Uint8     *GetKeyInput();
 			static eKeyState		GetKeyState(Uint8 scancode);
 			static bool             Destroy(ARenderer* renderer);
@@ -56,6 +56,7 @@ namespace Engine42
 			static void             Clear(void);
 			static void				AddTag(std::string tag);
 			static int				GetTag(std::string tag);
+			static void				InitKeyboard(void);
 
 			void             ResizeWindow(int width, int height);
 
@@ -68,7 +69,6 @@ namespace Engine42
 			unsigned int quadVBO;
 			std::shared_ptr<PostProcess>	_shaderFbo;
 			std::map<Uint8, eKeyState>	_keyboard;
-			std::vector<Uint8>			_keyboardKeys;
 			std::map<std::string, int>	_tags;
 			/*  private constructor*/
 			Engine(void); 
@@ -81,7 +81,7 @@ namespace Engine42
 			std::shared_ptr<Text>					_fontUI;
 
 			bool								_clear;
-			SDL_Event                           _event;
+			std::list<const SDL_Event>			_events;
 			const Uint8                         *_keys;
 			const SdlWindow                     *_win;
 			std::shared_ptr<Skybox>             _skybox;       
@@ -90,7 +90,6 @@ namespace Engine42
 			void                                _UpdateAll(void);
 			void                                _FixedUpdateAll(void);
 			void								_UpdateKeyboard(void);
-			void								_InitKeyboard(void);
 
 	};
 }

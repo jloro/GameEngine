@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:50:38 by jloro             #+#    #+#             */
-/*   Updated: 2019/10/14 12:05:26 by jules            ###   ########.fr       */
+/*   Updated: 2019/10/15 14:07:51 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,22 +52,19 @@ void 	Camera::Update()
 {
 	if (_freeFlight)
 	{
-		const Uint8		*keys = Engine42::Engine::GetKeyInput();
-		if (keys[SDL_SCANCODE_W])
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_W) == KEY_DOWN)
 			Move(eCameraDirection::Forward, Engine42::Time::GetDeltaTime());
-		if (keys[SDL_SCANCODE_S])
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_S) == KEY_DOWN)
 			Move(eCameraDirection::Backward, Engine42::Time::GetDeltaTime());
-		if (keys[SDL_SCANCODE_D])
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_D) == KEY_DOWN)
 			Move(eCameraDirection::Right, Engine42::Time::GetDeltaTime());
-		if (keys[SDL_SCANCODE_A])
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_A) == KEY_DOWN)
 			Move(eCameraDirection::Left, Engine42::Time::GetDeltaTime());
-		if (keys[SDL_SCANCODE_LCTRL])
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_Q) == KEY_DOWN)
 			Move(eCameraDirection::Down, Engine42::Time::GetDeltaTime());
-		if (keys[SDL_SCANCODE_SPACE])
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_E) == KEY_DOWN)
 			Move(eCameraDirection::Up, Engine42::Time::GetDeltaTime());
-		if (keys[SDL_SCANCODE_R])
-			Engine42::Engine::ReloadShaders();
-		if (keys[SDL_SCANCODE_LSHIFT])
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_LSHIFT) == KEY_DOWN)
 			_sprint = true;
 		else
 			_sprint = false;
