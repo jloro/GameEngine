@@ -7,20 +7,13 @@
 
 class AComponent;
 
-enum class eTags
-{
-	Default = 1 << 0,
-	Player = 1 << 1,
-};
-
 class GameObject
 {
 	public:
 		GameObject(void);
 		GameObject(Transform trans);
-		GameObject(Transform trans, eTags tag);
-		GameObject(eTags tag);
-		// IGameObject(const IGameObject & src);
+		GameObject(Transform trans, std::string tag);
+		GameObject(std::string tag);
 		virtual ~GameObject(void);
 		virtual std::shared_ptr<Transform> GetTransform(void) const;
 		void AddComponent(std::shared_ptr<AComponent> component);
@@ -57,17 +50,16 @@ class GameObject
 			}
 			return lst;
 		}
-		// IGameObject &	operator=(const IGameObject & rhs);
 
 		virtual void	Update(void);
 		virtual void	FixedUpdate(void);
-		// virtual int		Collide(IGameObject *other) = 0;
-		eTags			GetTag() const;
-		void			SetTag(eTags);
+		std::string		GetTag() const;
+		void			SetTag(std::string tag);
+		bool			CompareTags(std::string otherTag);
 		bool 			destroyOnReset;
 	protected:
-		eTags						_tag;
-		std::shared_ptr<Transform> _transform;
+		std::string					_tag;
+		std::shared_ptr<Transform>	_transform;
 		std::list<std::shared_ptr<AComponent>> _components;
 };
 #endif

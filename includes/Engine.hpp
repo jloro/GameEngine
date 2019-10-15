@@ -54,6 +54,9 @@ namespace Engine42
 			static bool             Destroy(GameObject *go);
 			static void             ReloadShaders(void);
 			static void             Clear(void);
+			static void				AddTag(std::string tag);
+			static int				GetTag(std::string tag);
+
 			void             ResizeWindow(int width, int height);
 
 			static void	createFBO();
@@ -66,14 +69,15 @@ namespace Engine42
 			std::shared_ptr<PostProcess>	_shaderFbo;
 			std::map<Uint8, eKeyState>	_keyboard;
 			std::vector<Uint8>			_keyboardKeys;
+			std::map<std::string, int>	_tags;
 			/*  private constructor*/
 			Engine(void); 
 			/*	private variables	*/
-			static Engine                       _inst;
-			std::list<std::shared_ptr<ARenderer>>           _renderers;
-			std::list<std::shared_ptr<Framebuffer>>			_framebuffers;
-			std::list<std::shared_ptr<GameObject>>   _gameObjs;
-			std::list<std::shared_ptr<UiText>>   _UI;
+			static Engine							_inst;
+			std::list<std::shared_ptr<ARenderer>>   _renderers;
+			std::list<std::shared_ptr<Framebuffer>>	_framebuffers;
+			std::list<std::shared_ptr<GameObject>>	_gameObjs;
+			std::list<std::shared_ptr<UiText>>		_UI;
 			std::shared_ptr<Text>					_fontUI;
 
 			bool								_clear;

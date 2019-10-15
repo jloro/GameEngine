@@ -10,6 +10,7 @@ Engine42::Engine::Engine(void){
 	_clear = false;
 	_keyboardKeys = {SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_B};
 	_InitKeyboard();
+	_tags["Default"] = 1 << 0;
 }
 
 void	Engine42::Engine::_InitKeyboard()
@@ -272,3 +273,10 @@ void                       Engine42::Engine::_FixedUpdateAll(void)
 		(*it)->FixedUpdate();
 	} 
 }
+
+void	Engine42::Engine::AddTag(std::string tag)
+{
+	_inst._tags[tag] = 1 << _inst._tags.size();
+}
+
+int		Engine42::Engine::GetTag(std::string tag) { return _inst._tags[tag]; }
