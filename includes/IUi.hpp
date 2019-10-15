@@ -1,38 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   UiText.hpp                                         :+:      :+:    :+:   */
+/*   IUi.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/09 13:35:19 by jules             #+#    #+#             */
-/*   Updated: 2019/10/15 16:44:34 by jules            ###   ########.fr       */
+/*   Created: 2019/10/15 15:26:39 by jules             #+#    #+#             */
+/*   Updated: 2019/10/15 15:31:51 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UITEXT_HPP
-# define UITEXT_HPP
+#ifndef IUI_HPP
+# define IUI_HPP
 
-# include "glm.hpp"
-# include "AComponent.hpp"
-# include <string>
-# include "IUi.hpp"
-
-class UiText : public AComponent, public IUi
+class IUi
 {
 	public:
-		UiText(std::string text, glm::vec2 pos, float scale, glm::vec4 color);
-		UiText(void);
-		virtual	~UiText();
 
-		virtual void	Draw() const;
-
-		std::string		text;
-		glm::vec2		pos;
-		float			scale;
-		glm::vec4		color;
+		virtual void	Draw() const = 0;
 	private:
-
 };
 
 #endif
