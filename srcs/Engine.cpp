@@ -62,7 +62,7 @@ void            Engine42::Engine::AddGameObject(std::list<std::shared_ptr<GameOb
 
 std::shared_ptr<Text>				Engine42::Engine::GetFontUI() { return _inst._fontUI; }
 
-void            Engine42::Engine::AddUIElement(std::shared_ptr<IUi> object)
+void            Engine42::Engine::AddUIElement(std::shared_ptr<AUi> object)
 {
 	if (object != nullptr)
 		_inst._UI.push_back(object);
@@ -172,6 +172,10 @@ void            Engine42::Engine::Loop(void)
 		event.type = SDL_USEREVENT;
 		while (SDL_PollEvent(&event) != 0)
 		{
+			if (event.type == SDL_MOUSEBUTTONDOWN)
+				_inst._OnClick();
+			if (event.type == SDL_MOUSEBUTTONUP)
+				_inst._OnRelease();
 			_inst._events.push_back(event);
 			if (Camera::Instance()->GetFreeFlight() && event.type == SDL_MOUSEMOTION)
 				Camera::Instance()->LookAround(event.motion.xrel, -event.motion.yrel);
@@ -289,3 +293,24 @@ void	Engine42::Engine::AddTag(std::string tag)
 }
 
 int		Engine42::Engine::GetTag(std::string tag) { return _inst._tags[tag]; }
+
+void	Engine42::Engine::_OnClick() const
+{
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+	for (auto it = _UI.begin(); it != _UI.end(); it++)
+	{
+		glm::vec4 minMax = (*it)->GetMinMax();
+		if (x > minMax[0] && x < minMax[1] && y > minMax[2] && y < minMax[3])
+			(*it)->OnClick();
+	}
+}
+
+void	Engine42::Engine::_OnRelease() const
+{
+	for (auto it = _UI.begin(); it != _UI.end(); it++)
+	{
+		if ((*it)->GetClicked())
+			(*it)->OnRelease();
+	}
+}

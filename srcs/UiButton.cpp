@@ -2,7 +2,7 @@
 #include "SdlWindow.hpp"
 #include "Engine.hpp"
 
-UiButton::UiButton(glm::vec2 pos, glm::vec2 scale, std::string text, glm::vec4 color, void (*OnClick)()) : pos(pos), scale(scale), color(color), OnClick(OnClick)
+UiButton::UiButton(glm::vec2 pos, glm::vec2 scale, std::string text, glm::vec4 color, void (*OnClickEvent)()) : pos(pos), scale(scale), color(color), OnClickEvent(OnClickEvent)
 {
 	_proj = glm::ortho(0.0f, (float)SdlWindow::GetMain()->GetWidth(), 0.0f, (float)SdlWindow::GetMain()->GetHeight());
 	std::vector<const char *>	shadersPath{"shaders/Color.vs.glsl", "shaders/Color.fs.glsl"};
@@ -55,4 +55,17 @@ void	UiButton::Draw() const
 glm::vec4		UiButton::GetMinMax() const
 {
 	return glm::vec4(_vertices[4], _vertices[0], _vertices[3], _vertices[1]);
+}
+
+void	UiButton::OnClick()
+{
+	AUi::OnClick();
+	color = glm::vec4(color.x - 0.1, color.y - 0.1, color.z - 0.1, color.w);
+	OnClickEvent();
+}
+
+void	UiButton::OnRelease()
+{
+	AUi::OnRelease();
+	color = glm::vec4(color.x + 0.1, color.y + 0.1, color.z + 0.1, color.w);
 }

@@ -1,24 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IUi.hpp                                            :+:      :+:    :+:   */
+/*   AUi.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/15 15:26:39 by jules             #+#    #+#             */
-/*   Updated: 2019/10/15 15:31:51 by jules            ###   ########.fr       */
+/*   Created: 2019/10/16 16:08:36 by jules             #+#    #+#             */
+/*   Updated: 2019/10/16 16:19:28 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef IUI_HPP
-# define IUI_HPP
+#ifndef AUI_HPP
+# define AUI_HPP
 
-class IUi
+# include "glm.hpp"
+
+class AUi
 {
 	public:
 
-		virtual void	Draw() const = 0;
+		AUi(void);
+		~AUi(void);
+		virtual void			Draw() const = 0;
+		virtual	void			OnClick();
+		virtual	void			OnRelease();
+		virtual glm::vec4		GetMinMax() const = 0;
+
+		bool					GetClicked() const;
 	private:
+		bool					_clicked;
 };
 
 #endif

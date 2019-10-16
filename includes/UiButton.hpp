@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/15 14:33:58 by jules             #+#    #+#             */
-/*   Updated: 2019/10/15 17:44:03 by jules            ###   ########.fr       */
+/*   Updated: 2019/10/16 16:16:32 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,24 @@
 
 # include "AComponent.hpp"
 # include "Shader.hpp"
-# include "IUi.hpp"
+# include "AUi.hpp"
 # include "UiText.hpp"
 
-class UiButton : public AComponent, public IUi
+class UiButton : public AComponent, public AUi
 {
 	public:
-		UiButton(glm::vec2 pos, glm::vec2 scale, std::string text, glm::vec4 color, void (*OnClick)());
+		UiButton(glm::vec2 pos, glm::vec2 scale, std::string text, glm::vec4 color, void (*OnClickEvent)());
 		UiButton(void);
 		virtual	~UiButton();
 
 		glm::vec2		pos;
 		glm::vec2		scale;
 		glm::vec4		color;
-		void			(*OnClick)();
+		void			(*OnClickEvent)();
 
 		virtual void	Draw() const;
+		virtual void	OnClick();
+		virtual void	OnRelease();
 
 		glm::vec4		GetMinMax() const;
 	private:

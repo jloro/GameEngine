@@ -23,3 +23,15 @@ void	UiText::Draw() const
 {
 	Engine42::Engine::GetFontUI()->RenderText(text, pos.x, pos.y, scale, color); 
 }
+
+void	UiText::OnClick()
+{
+	AUi::OnClick();
+}
+
+void	UiText::OnRelease()
+{
+	AUi::OnRelease();
+}
+
+glm::vec4	UiText::GetMinMax() const { return glm::vec4(1.0f); }
