@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/26 13:31:18 by jules             #+#    #+#             */
-/*   Updated: 2019/10/09 13:51:51 by jules            ###   ########.fr       */
+/*   Updated: 2019/10/17 16:28:52 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,10 @@ class Text
 
 		void	UpdateProj();
 		int		GetPixelSize() const;
+		int		GetTextWidth(std::string text, float scale);
+
+		float up;
+		float down;
 	private:
 		FT_Face			_face;
 		std::shared_ptr<Shader>	_shader;

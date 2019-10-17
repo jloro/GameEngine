@@ -6,6 +6,8 @@
 
 Text::Text(const std::string font, FT_Library lib, int pixelSize) : _pixelSize(pixelSize)
 {
+	up = 0.25f;
+	down = 5.0f;
 	if (FT_New_Face(lib, font.c_str(), 0, &_face))
 		throw std::runtime_error(std::string("Could not open font ") + font);
 	_proj = glm::ortho(0.0f, (float)SdlWindow::GetMain()->GetWidth(), 0.0f, (float)SdlWindow::GetMain()->GetHeight());
@@ -29,8 +31,8 @@ Text::Text(const std::string font, FT_Library lib, int pixelSize) : _pixelSize(p
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, _face->glyph->bitmap.width, _face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, _face->glyph->bitmap.buffer);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -62,11 +64,21 @@ void	Text::UpdateProj()
 {
 	_proj = glm::ortho(0.0f, (float)SdlWindow::GetMain()->GetWidth(), 0.0f, (float)SdlWindow::GetMain()->GetHeight());
 }
-
+#include "Engine.hpp"
 void	Text::RenderText(const std::string text, float x, float y, float scale, glm::vec4 color)
 {
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_W) == KEY_DOWN)
+		up += 0.05f;
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_S) == KEY_DOWN)
+		up -= 0.05f;
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_D) == KEY_DOWN)
+		down += 0.05f;
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_A) == KEY_DOWN)
+		down -= 0.05f;
+	std::cout << "up: " << up << ", down: " << down << ", smoothing: " << up / down << std::endl;
 	GLfloat x2, y2, w, h;
 	_shader->use();
+	_shader->setFloat("smoothing", up / down);
 	_shader->setVec4("color", color);
 	_shader->setInt("tex", 0);
 	_shader->setMat4("projection", _proj);
@@ -102,3 +114,14 @@ void	Text::RenderText(const std::string text, float x, float y, float scale, glm
 }
 
 int	Text::GetPixelSize(void) const { return _pixelSize; }
+
+int	Text::GetTextWidth(std::string text, float scale)
+{
+	int w = 0;
+	for (auto it = text.begin(); it != text.end(); it++)
+	{
+		Character ch = _characters[*it];
+		w += ch.Bearing.x * scale + ch.Size.x * scale;
+	}
+	return w;
+}

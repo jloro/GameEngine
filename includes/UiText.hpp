@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/09 13:35:19 by jules             #+#    #+#             */
-/*   Updated: 2019/10/16 16:16:38 by jules            ###   ########.fr       */
+/*   Updated: 2019/10/17 11:40:42 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,19 @@ class UiText : public AComponent, public AUi
 
 		glm::vec4		GetMinMax() const;
 
-		std::string		text;
 		glm::vec2		pos;
-		float			scale;
 		glm::vec4		color;
+
+		std::string		GetText() const;
+		int				GetWidthText() const;
+		float			GetScale() const;
+		void			SetText(std::string text);
+		void			SetScale(float scale);
+
 	private:
+		std::string		_text;
+		float			_scale;
+		int				_width;
 
 };
 

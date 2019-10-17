@@ -10,8 +10,10 @@ UiButton::UiButton(glm::vec2 pos, glm::vec2 scale, std::string text, glm::vec4 c
 
 	_shader = std::make_shared<Shader>(shadersPath, type);
 
-	glm::vec2 textPos = glm::vec2(pos.x, pos.y - Engine42::Engine::GetFontUI()->GetPixelSize() / 2.0f);
+	glm::vec2 textPos = glm::vec2(pos.x, pos.y);
+
 	_text = std::make_shared<UiText>(text, textPos, 1.0f, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+
 	float x = 0.10f * (float)SdlWindow::GetMain()->GetWidth();
 	float y = 0.10f * (float)SdlWindow::GetMain()->GetHeight();
 	_vertices = {
@@ -42,6 +44,12 @@ UiButton::~UiButton() {}
 
 void	UiButton::Draw() const
 {
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_UP) == KEY_PRESS)
+		_text->SetScale(_text->GetScale() + 1);
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_DOWN) == KEY_PRESS)
+		_text->SetScale(_text->GetScale() - 1);
+
+	std::cout << "scale: " <<_text->GetScale() << std::endl;
 	_shader->use();
 	_shader->setVec4("color", color);
 	_shader->setMat4("projection", _proj);
