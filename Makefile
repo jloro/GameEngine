@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/10/16 16:15:54 by jules            ###   ########.fr        #
+#    Updated: 2019/10/18 11:01:59 by jules            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,7 @@ GLAD_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/glad)
 GLM_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/glm)
 ASSIMP_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/assimp-$(ASSIMP_VER))
 FREETYPE_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/freetype-$(FREETYPE_VER))
+JSON_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/json)
 
 #IRRXML_PATH = $(addprefix $(ASSIMP_PATH), /build/contrib/irrXML)
 
@@ -73,7 +74,8 @@ LIB_INCS =	-I $(GLM_PATH)/glm \
 			-I $(SDL_MIXER_PATH)/include/SDL2 \
 			-I $(ASSIMP_PATH)/include/ \
 			-I $(GLAD_PATH)/includes/ \
-			-I $(FREETYPE_PATH)/include
+			-I $(FREETYPE_PATH)/include \
+			-I $(JSON_PATH)/include
 
 
 HEADERS = $(addprefix $(HEADER_DIR), $(HEADER))

@@ -6,33 +6,32 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/26 13:31:18 by jules             #+#    #+#             */
-/*   Updated: 2019/10/17 16:28:52 by jules            ###   ########.fr       */
+/*   Updated: 2019/10/18 14:12:04 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TEXT_HPP
 # define TEXT_HPP
 
-# include <ft2build.h>
-# include FT_FREETYPE_H
 # include <string>
 # include "Shader.hpp"
 # include <memory>
 # include "glm.hpp"
 # include <map>
 # include "SdlWindow.hpp"
+# include <nlohmann/json.hpp>
 
 struct Character {
-    GLuint     TextureID;  // ID handle of the glyph texture
-    glm::ivec2 Size;       // Size of glyph
-    glm::ivec2 Bearing;    // Offset from baseline to left/top of glyph
-    GLuint     Advance;    // Offset to advance to next glyph
+    glm::vec2 Size;       // Size of glyph
+    glm::vec2 Bearing;    // Offset from baseline to left/top of glyph
+    float     Advance;    // Offset to advance to next glyph
+	glm::vec4	textureCoord; //s0, s1, t0, t1
 };
 
 class Text
 {
 	public:
-		Text(const std::string font, FT_Library lib, int pixelSize);
+		Text(const std::string font, int pixelSize);
 		virtual ~Text();
 
 		void	RenderText(const std::string text, float x, float y, float scale, glm::vec4 color);
@@ -44,7 +43,8 @@ class Text
 		float up;
 		float down;
 	private:
-		FT_Face			_face;
+		GLuint			_texture;
+		nlohmann::json	_json;
 		std::shared_ptr<Shader>	_shader;
 		GLuint			_vbo;
 		GLuint			_vao;
