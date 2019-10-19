@@ -11,7 +11,7 @@
 # include "ARenderer.hpp"
 # include "Framebuffer.hpp"
 # include "PostProcess.hpp"
-# include "Text.hpp"
+# include "Font.hpp"
 # include "UiText.hpp"
 
 enum eKeyState {
@@ -40,10 +40,10 @@ namespace Engine42
 			static void            AddGameObject(std::shared_ptr<GameObject> object);
 			static void            AddGameObject(std::list<std::shared_ptr<GameObject>> objects);
 			static void            AddUIElement(std::shared_ptr<AUi> object);
-			static void            ChangeFontUI(std::shared_ptr<Text> font);
+			static void            ChangeFontUI(std::shared_ptr<Font> font);
 			static void            SetSkybox(std::shared_ptr<Skybox> skybox);
 			static void            AddPostProcessShader(std::shared_ptr<Shader> postProcessShader);
-			static std::shared_ptr<Text> GetFontUI();
+			static std::shared_ptr<Font> GetFontUI();
 
 
 			static void            Loop(void);
@@ -78,7 +78,7 @@ namespace Engine42
 			std::list<std::shared_ptr<Framebuffer>>	_framebuffers;
 			std::list<std::shared_ptr<GameObject>>	_gameObjs;
 			std::list<std::shared_ptr<AUi>>		_UI;
-			std::shared_ptr<Text>					_fontUI;
+			std::shared_ptr<Font>					_fontUI;
 
 			bool								_clear;
 			std::list<const SDL_Event>			_events;

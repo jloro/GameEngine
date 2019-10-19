@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/09 13:35:19 by jules             #+#    #+#             */
-/*   Updated: 2019/10/17 11:40:42 by jules            ###   ########.fr       */
+/*   Updated: 2019/10/19 14:10:56 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ class UiText : public AComponent, public AUi
 	private:
 		std::string		_text;
 		float			_scale;
-		int				_width;
+		float			_width;
 
 };
 

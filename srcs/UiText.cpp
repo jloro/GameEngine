@@ -22,7 +22,7 @@ UiText::~UiText()
 
 void	UiText::Draw() const
 {
-	Engine42::Engine::GetFontUI()->RenderText(_text, pos.x - _width / 2.0f, pos.y - Engine42::Engine::GetFontUI()->GetPixelSize() / 2.0f, _scale, color); 
+	Engine42::Engine::GetFontUI()->RenderText(_text, pos.x - _width / 2.0f, pos.y - static_cast<float>(Engine42::Engine::GetFontUI()->GetPixelSize()) / 2.0f, _scale, color); 
 }
 
 void	UiText::OnClick()

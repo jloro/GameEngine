@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Text.hpp                                           :+:      :+:    :+:   */
+/*   Font.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/08/26 13:31:18 by jules             #+#    #+#             */
-/*   Updated: 2019/10/18 14:12:04 by jules            ###   ########.fr       */
+/*   Created: 2019/10/19 14:22:15 by jules             #+#    #+#             */
+/*   Updated: 2019/10/19 14:22:38 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TEXT_HPP
-# define TEXT_HPP
+#ifndef FONT_HPP
+# define FONT_HPP
 
 # include <string>
 # include "Shader.hpp"
@@ -19,7 +19,6 @@
 # include "glm.hpp"
 # include <map>
 # include "SdlWindow.hpp"
-# include <nlohmann/json.hpp>
 
 struct Character {
     glm::vec2 Size;       // Size of glyph
@@ -28,11 +27,11 @@ struct Character {
 	glm::vec4	textureCoord; //s0, s1, t0, t1
 };
 
-class Text
+class Font
 {
 	public:
-		Text(const std::string font, int pixelSize);
-		virtual ~Text();
+		Font(const std::string font, int pixelSize);
+		virtual ~Font();
 
 		void	RenderText(const std::string text, float x, float y, float scale, glm::vec4 color);
 
@@ -40,11 +39,8 @@ class Text
 		int		GetPixelSize() const;
 		int		GetTextWidth(std::string text, float scale);
 
-		float up;
-		float down;
 	private:
 		GLuint			_texture;
-		nlohmann::json	_json;
 		std::shared_ptr<Shader>	_shader;
 		GLuint			_vbo;
 		GLuint			_vao;

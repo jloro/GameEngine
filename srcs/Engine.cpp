@@ -60,14 +60,14 @@ void            Engine42::Engine::AddGameObject(std::list<std::shared_ptr<GameOb
 	_inst._gameObjs.insert(_inst._gameObjs.begin(), objs.begin(), objs.end());
 }
 
-std::shared_ptr<Text>				Engine42::Engine::GetFontUI() { return _inst._fontUI; }
+std::shared_ptr<Font>				Engine42::Engine::GetFontUI() { return _inst._fontUI; }
 
 void            Engine42::Engine::AddUIElement(std::shared_ptr<AUi> object)
 {
 	if (object != nullptr)
 		_inst._UI.push_back(object);
 }
-void            Engine42::Engine::ChangeFontUI(std::shared_ptr<Text> font)
+void            Engine42::Engine::ChangeFontUI(std::shared_ptr<Font> font)
 {
 	_inst._fontUI = font;
 }
