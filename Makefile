@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/10/19 14:23:25 by jules            ###   ########.fr        #
+#    Updated: 2019/10/19 14:29:16 by jules            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,6 @@ LIB_DIR = ./lib
 SDL_VER = 2.0.9
 SDL_MIXER_VER = 2.0.2
 ASSIMP_VER = 4.1.0
-FREETYPE_VER = 2.10.0
 
 MAIN_DIR_PATH = $(shell pwd)
 SDL_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/sdl2)
@@ -57,7 +56,6 @@ SDL_MIXER_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/sdl2_mixer)
 GLAD_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/glad)
 GLM_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/glm)
 ASSIMP_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/assimp-$(ASSIMP_VER))
-FREETYPE_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/freetype-$(FREETYPE_VER))
 JSON_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/json)
 
 #IRRXML_PATH = $(addprefix $(ASSIMP_PATH), /build/contrib/irrXML)
@@ -74,7 +72,6 @@ LIB_INCS =	-I $(GLM_PATH)/glm \
 			-I $(SDL_MIXER_PATH)/include/SDL2 \
 			-I $(ASSIMP_PATH)/include/ \
 			-I $(GLAD_PATH)/includes/ \
-			-I $(FREETYPE_PATH)/include \
 			-I $(JSON_PATH)/include
 
 
@@ -93,7 +90,7 @@ DONE_MESSAGE = "\033$(GREEN)2m✓\t\033$(GREEN)mDONE !\033[0m\
 
 ## RULES ##
 
-all: CHECK_LIB_DIR ASSIMP SDL_MIXER FREETYPE GLAD GLM print_name $(NAME) print_end
+all: CHECK_LIB_DIR ASSIMP SDL_MIXER GLAD GLM print_name $(NAME) print_end
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp $(HEADERS)
 	@echo "\033$(PURPLE)m⧖	Creating	$@\033[0m"
@@ -174,26 +171,6 @@ GLAD:
 		make -C $(GLAD_PATH);\
 	fi
 
-FREETYPE:	
-	@if [ ! -d "./lib/freetype-$(FREETYPE_VER)" ]; then \
-		echo "\033$(PINK)m⚠\tFreetype is not installed ! ...\033[0m"; \
-		echo "\033$(CYAN)m➼\tCompiling Freetype-$(FREETYPE_VER) ...\033[0m"; \
-		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)m\tIn 2 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)3m\tIn 1 ...\033[0m"; sleep 1; printf "\n"; \
-		cd lib &&\
-		curl -OL https://mirrors.up.pt/pub/nongnu/freetype/freetype-2.10.0.tar.bz2 && \
-		tar -zxvf freetype-$(FREETYPE_VER).tar.bz2 && \
-		rm freetype-$(FREETYPE_VER).tar.bz2 && \
-		mkdir -p $(FREETYPE_PATH) && \
-		cd freetype-$(FREETYPE_VER) && \
-			cmake -B build && \
-			cd build && make && \
-		cd ../.. && \
-		echo "\033$(GREEN)m✓\tfreetype-$(FREETYPE_VER) installed !\033[0m"; \
-	else \
-		echo "\033$(GREEN)m✓\tfreetype-$(FREETYPE_VER) already installed\033[0m"; \
-	fi
 
 ASSIMP:	
 	@if [ ! -d "./lib/assimp-$(ASSIMP_VER)" ]; then \
