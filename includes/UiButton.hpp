@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/15 14:33:58 by jules             #+#    #+#             */
-/*   Updated: 2019/10/16 16:16:32 by jules            ###   ########.fr       */
+/*   Updated: 2019/10/19 19:41:11 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,16 @@ class UiButton : public AComponent, public AUi
 		glm::vec2		scale;
 		glm::vec4		color;
 		void			(*OnClickEvent)();
+		void			(*OnReleaseEvent)();
 
 		virtual void	Draw() const;
 		virtual void	OnClick();
 		virtual void	OnRelease();
 
 		glm::vec4		GetMinMax() const;
+		virtual	void	Resize();
+
+		std::shared_ptr<UiText>			text;
 	private:
 		std::vector<GLfloat>	_vertices;
 		std::vector<unsigned int>	_faces;
@@ -43,7 +47,7 @@ class UiButton : public AComponent, public AUi
 		GLuint			_vao;
 		GLuint			_ebo;
 		glm::mat4		_proj;
-		std::shared_ptr<UiText>			_text;
+
 };
 
 #endif

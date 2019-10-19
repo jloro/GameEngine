@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/09 13:35:19 by jules             #+#    #+#             */
-/*   Updated: 2019/10/19 14:10:56 by jules            ###   ########.fr       */
+/*   Updated: 2019/10/19 16:55:31 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class UiText : public AComponent, public AUi
 		virtual void	Draw() const;
 		virtual	void	OnClick();
 		virtual	void	OnRelease();
-
+		virtual	void	Resize();
 		glm::vec4		GetMinMax() const;
 
 		glm::vec2		pos;

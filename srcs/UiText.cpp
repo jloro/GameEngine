@@ -10,7 +10,7 @@ UiText::UiText(std::string text, glm::vec2 pos, float scale, glm::vec4 color) : 
 UiText::UiText(void)
 {
 	_text = "Text";
-	pos = glm::vec2(0.0f, SdlWindow::GetMain()->GetHeight() - Engine42::Engine::GetFontUI()->GetPixelSize());
+	pos = glm::vec2(0.0f, SdlWindow::GetMain()->GetHeight() - Engine42::Engine::GetFontUI()->GetPixelSize() * _scale);
 	_scale = 1.0f;
 	color = glm::vec4(1.0f);
 	Engine42::Engine::GetFontUI()->GetTextWidth(_text, _scale);
@@ -22,7 +22,9 @@ UiText::~UiText()
 
 void	UiText::Draw() const
 {
-	Engine42::Engine::GetFontUI()->RenderText(_text, pos.x - _width / 2.0f, pos.y - static_cast<float>(Engine42::Engine::GetFontUI()->GetPixelSize()) / 2.0f, _scale, color); 
+	float posx = pos.x - _width / 2.0f + (float)SdlWindow::GetMain()->GetWidth() / 2.0f;
+	float posy = pos.y - static_cast<float>(Engine42::Engine::GetFontUI()->GetPixelSize()) * _scale / 2.0f + (float)SdlWindow::GetMain()->GetHeight() / 2.0f;
+	Engine42::Engine::GetFontUI()->RenderText(_text, posx, posy, _scale, color); 
 }
 
 void	UiText::OnClick()
@@ -51,3 +53,8 @@ void			UiText::SetScale(float scale)
 	_width = Engine42::Engine::GetFontUI()->GetTextWidth(_text, _scale);
 }
 
+
+void			UiText::Resize()
+{
+
+}

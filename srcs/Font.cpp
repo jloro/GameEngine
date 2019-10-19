@@ -134,7 +134,7 @@ int	Font::GetTextWidth(std::string text, float scale)
 	for (auto it = text.begin(); it != text.end(); it++)
 	{
 		Character ch = _characters[*it];
-		w += ch.Bearing.x * scale + ch.Size.x * scale;
+		w += ch.Advance * scale;
 	}
 	return w;
 }

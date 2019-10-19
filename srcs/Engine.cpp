@@ -77,6 +77,8 @@ void            Engine42::Engine::ResizeWindow(int width, int height)
 	SdlWindow::GetMain()->SetWidth(width);
 	SdlWindow::GetMain()->SetHeight(height);
 	_fontUI->UpdateProj();
+	for (auto it = _UI.begin(); it != _UI.end(); it++)
+		(*it)->Resize();
 }
 std::list<const SDL_Event> Engine42::Engine::GetEvents(){ return _inst._events;}
 const Uint8 *Engine42::Engine::GetKeyInput(){ return _inst._keys;}
