@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/15 14:33:58 by jules             #+#    #+#             */
-/*   Updated: 2019/10/19 19:41:11 by jules            ###   ########.fr       */
+/*   Updated: 2019/10/21 11:06:40 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,24 +21,27 @@
 class UiButton : public AComponent, public AUi
 {
 	public:
-		UiButton(glm::vec2 pos, glm::vec2 scale, std::string text, glm::vec4 color, void (*OnClickEvent)());
+		UiButton(glm::vec2 pos, float width, float height, std::string text, glm::vec4 color, void (*OnClickEvent)());
+		UiButton(glm::vec2 pos, float width, float height, std::string text, const std::string path, void (*OnClickEvent)());
 		UiButton(void);
 		virtual	~UiButton();
 
 		glm::vec2		pos;
-		glm::vec2		scale;
 		glm::vec4		color;
 		void			(*OnClickEvent)();
-		void			(*OnReleaseEvent)();
+		void			(*OnReleaseEvent)() = nullptr;
 
 		virtual void	Draw() const;
 		virtual void	OnClick();
 		virtual void	OnRelease();
-
-		glm::vec4		GetMinMax() const;
 		virtual	void	Resize();
 
+		glm::vec4		GetMinMax() const;
+		float			GetWidth() const;
+		float			GetHeight() const;
+
 		std::shared_ptr<UiText>			text;
+		bool							displayText;
 	private:
 		std::vector<GLfloat>	_vertices;
 		std::vector<unsigned int>	_faces;
@@ -47,6 +50,12 @@ class UiButton : public AComponent, public AUi
 		GLuint			_vao;
 		GLuint			_ebo;
 		glm::mat4		_proj;
+		GLuint			_textureId;
+		bool			_hasImage;
+		float			_width;
+		float			_height;
+
+		void			_Init(std::string text, const std::string path = "");
 
 };
 
