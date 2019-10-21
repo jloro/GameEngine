@@ -62,12 +62,17 @@ namespace Engine42
 
 			static void	createFBO();
 		private:
+
 			unsigned int _fbo;
-			unsigned int _colorBuffer;
+			unsigned int _colorBufferMS;
 			unsigned int _rbo;
-			unsigned int quadVAO;
-			unsigned int quadVBO;
-			std::shared_ptr<PostProcess>	_shaderFbo;
+			unsigned int _quadVAO;
+			unsigned int _quadVBO;
+
+			unsigned int _fboIntermediate;
+			unsigned int _colorBuffer;
+			std::shared_ptr<Shader>	_shaderFbo;
+
 			std::map<Uint8, eKeyState>	_keyboard;
 			std::map<std::string, int>	_tags;
 			/*  private constructor*/

@@ -112,19 +112,31 @@ void            Engine42::Engine::createFBO(void)
 	glGenFramebuffers(1, &_inst._fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, _inst._fbo);
 
+	glGenTextures(1, &_inst._colorBufferMS);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, _inst._colorBufferMS);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, SdlWindow::GetMain()->GetWidth(), SdlWindow::GetMain()->GetHeight(), GL_TRUE);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, _inst._colorBufferMS, 0);
+
+	glGenRenderbuffers(1, &_inst._rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, _inst._rbo);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, SdlWindow::GetMain()->GetWidth(), SdlWindow::GetMain()->GetHeight());
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _inst._rbo);
+
+	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glGenFramebuffers(1, &_inst._fboIntermediate);
+	glBindFramebuffer(GL_FRAMEBUFFER, _inst._fboIntermediate);
+
 	glGenTextures(1, &_inst._colorBuffer);
 	glBindTexture(GL_TEXTURE_2D, _inst._colorBuffer);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SdlWindow::GetMain()->GetWidth(), SdlWindow::GetMain()->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glBindTexture(GL_TEXTURE_2D, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _inst._colorBuffer, 0);
-
-	glGenRenderbuffers(1, &_inst._rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, _inst._rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SdlWindow::GetMain()->GetWidth(), SdlWindow::GetMain()->GetHeight());
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _inst._rbo);
 
 	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
@@ -140,20 +152,19 @@ void            Engine42::Engine::createFBO(void)
 		1.0f,  1.0f,  1.0f, 1.0f
 	};
 
-	glGenVertexArrays(1, &_inst.quadVAO);
-	glGenBuffers(1, &_inst.quadVBO);
-	glBindVertexArray(_inst.quadVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, _inst.quadVBO);
+	glGenVertexArrays(1, &_inst._quadVAO);
+	glGenBuffers(1, &_inst._quadVBO);
+	glBindVertexArray(_inst._quadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, _inst._quadVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
-	std::vector<const char *>	shadersPath{"shaders/fbo.vs.glsl", "shaders/PostProcess.fs.glsl"};
+	std::vector<const char *>	shadersPath{"shaders/Color.vs.glsl", "shaders/Color.fs.glsl"};
 	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
-	_inst._shaderFbo.reset(new PostProcess(shadersPath, type));
-	_inst.AddGameObject(_inst._shaderFbo);
+	_inst._shaderFbo = std::make_shared<Shader>(shadersPath, type);
 }
 
 void            Engine42::Engine::Loop(void)
@@ -165,7 +176,7 @@ void            Engine42::Engine::Loop(void)
 	float       fixedDelta = 0.02f;
 	SDL_Event	event;
 
-	//createFBO();
+	createFBO();
 	while (!quit)
 	{
 		delta = (((float)SDL_GetTicks()) / 1000) - lastTime;
@@ -244,6 +255,10 @@ void                         Engine42::Engine::_RenderAll(void)
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	_renderers.sort(_sort);
     if (_skybox != nullptr)
@@ -258,6 +273,25 @@ void                         Engine42::Engine::_RenderAll(void)
     for (auto it = _UI.begin(); it != _UI.end(); it++)
          (*it)->Draw();
 	glEnable(GL_DEPTH_TEST);
+
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, _fbo);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fboIntermediate);
+	glBlitFramebuffer(0, 0, SdlWindow::GetMain()->GetWidth(), SdlWindow::GetMain()->GetHeight(), 0, 0, SdlWindow::GetMain()->GetWidth(), SdlWindow::GetMain()->GetHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+
+	_shaderFbo->use();
+	_shaderFbo->setMat4("projection", glm::mat4(1.0f));
+	_shaderFbo->setInt("uHasImage", true);
+	_shaderFbo->setVec4("color", glm::vec4(1.0f));
+	_shaderFbo->setInt("tex", 0);
+	glBindVertexArray(_quadVAO);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, _colorBuffer);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 	_win->Swap();
 }
 void                          Engine42::Engine::_UpdateAll(void)
