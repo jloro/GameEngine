@@ -13,8 +13,10 @@
 # include "PostProcess.hpp"
 # include "Font.hpp"
 # include "UiText.hpp"
+# include "Material.hpp"
+# include "Light.hpp"
 
-enum eKeyState {
+enum class eKeyState {
 	KEY_PRESS, //key press during frame
 	KEY_RELEASE, //key release during frame
 	KEY_DOWN,
@@ -58,8 +60,9 @@ namespace Engine42
 			static int				GetTag(std::string tag);
 			static void				InitKeyboard(void);
 
-			void             ResizeWindow(int width, int height);
-
+			void             		ResizeWindow(int width, int height);
+			static void				AddLight(std::shared_ptr<GameObject> light);
+			static std::list<std::shared_ptr<Light>> &	GetLights();
 			static void	createFBO();
 		private:
 
@@ -82,7 +85,8 @@ namespace Engine42
 			std::list<std::shared_ptr<ARenderer>>   _renderers;
 			std::list<std::shared_ptr<Framebuffer>>	_framebuffers;
 			std::list<std::shared_ptr<GameObject>>	_gameObjs;
-			std::list<std::shared_ptr<AUi>>		_UI;
+			std::list<std::shared_ptr<Light>>   	_lights;
+			std::list<std::shared_ptr<AUi>>			_UI;
 			std::shared_ptr<Font>					_fontUI;
 
 			bool								_clear;

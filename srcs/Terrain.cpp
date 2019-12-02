@@ -21,7 +21,6 @@ Terrain::Terrain(unsigned int x, unsigned int z, const std::string &path) : Mode
 	_meshes.push_back(_GenerateTerrain(x, z));
 	LoadTexture(path);
 	_meshes[0].SendToOpenGL();
-	_meshes[0].SetHasTexture(true);
 }
 Terrain::Terrain(unsigned int x, unsigned int z, const std::string &path, float tilingX, float tilingY) : Model(), _x (x * _size), _z(z * _size)
 {
@@ -30,7 +29,6 @@ Terrain::Terrain(unsigned int x, unsigned int z, const std::string &path, float 
     _meshes.push_back(_GenerateTerrain(x, z));
     LoadTexture(path);
    _meshes[0].SendToOpenGL();
-	_meshes[0].SetHasTexture(true);
 
 }
 Terrain::Terrain(Terrain const & src) : Model(src), _x(src._x), _z(src._z)
@@ -62,6 +60,7 @@ Mesh       Terrain::_GenerateTerrain(unsigned int xSize, unsigned int zSize)
             vert.position.z = (static_cast<float>(z) - halfZ) * _size;
             vert.texCoord.x = static_cast<float>(x) / _tilingX;
             vert.texCoord.y = static_cast<float>(z) / _tilingY;
+            vert.normal = glm::vec3(0.0f, 1.0f, 0.0f);
             vertices.push_back(vert);
             i++;
         }
@@ -93,7 +92,7 @@ Mesh       Terrain::_GenerateTerrain(unsigned int xSize, unsigned int zSize)
 bool    Terrain::LoadTexture(const std::string & path) 
 {
     _dir  = path.substr(0, path.find_last_of('/'));
-    _meshes[0].textures.push_back(Model::_LoadSimpleTexture(eTextureType::Diffuse ,path));
+    _meshes[0].material.SetDiffuseMap(Model::_LoadSimpleTexture(eTextureType::Diffuse ,path));
     return true;
 }   
 bool Terrain::LoadTexture(const std::string &path, float tilingX, float tilingY)
@@ -101,6 +100,6 @@ bool Terrain::LoadTexture(const std::string &path, float tilingX, float tilingY)
     _tilingX = tilingX;
     _tilingY = tilingY;
     _dir  = path.substr(0, path.find_last_of('/'));
-    _meshes[0].textures.push_back(Model::_LoadSimpleTexture(eTextureType::Diffuse ,path));
+    _meshes[0].material.SetDiffuseMap(Model::_LoadSimpleTexture(eTextureType::Diffuse ,path));
     return true;
 }

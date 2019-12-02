@@ -17,19 +17,10 @@ Mesh::Mesh(void)
 {
     _vao = _vbo = _ebo = 0;
 }
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> faces, std::vector<Texture> textures) : 
-vertices(vertices), faces(faces), textures(textures), _hasTexture(true)
+
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> faces, Material material) : 
+vertices(vertices), faces(faces), material(material)
 {
-	diffuse = glm::vec3(-1.0f);
-	ambient = glm::vec3(-1.0f);
-	specular = glm::vec3(-1.0f);
-}
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> faces, glm::vec3 diffuse, glm::vec3 ambient, glm::vec3 specular) : 
-vertices(vertices), faces(faces), _hasTexture(false)
-{
-	this->diffuse = diffuse;
-	this->ambient = ambient;
-	this->specular = specular;
 }
 Mesh::Mesh(Mesh const & src) 
 {
@@ -48,11 +39,7 @@ Mesh &	Mesh::operator=(Mesh const & rhs)
 {
     this->vertices = rhs.vertices;
     this->faces = rhs.faces;
-    this->textures = rhs.textures;
-	this->diffuse = rhs.diffuse;
-	this->specular = rhs.specular;
-	this->ambient = rhs.ambient;
-	this->_hasTexture = rhs.HasTexture();
+    this->material = rhs.material;
     glDeleteBuffers(1, &_ebo);
     glDeleteBuffers(1, &_vbo);
     glDeleteBuffers(1, &_vao);
@@ -84,42 +71,11 @@ void	Mesh::SendToOpenGL()
 
 	glBindVertexArray(0);
 }
-
+#include "Engine.hpp"
 void	Mesh::Draw(const std::shared_ptr<Shader>  shader) const
 {
-	unsigned int	diffuseNb = 0;
-	unsigned int	specularNb = 0;
-	unsigned int	cubeMapNb = 0;
-	std::string		name;
-
-	shader->setInt("uHasTexture", static_cast<int>(_hasTexture));
-	if (!_hasTexture)
-	{
-		shader->setVec3("uDiffuse", diffuse);
-		shader->setVec3("uAmbient", ambient);
-		shader->setVec3("uSpecular", specular);
-	}
-	for (unsigned int i = 0; i < textures.size(); i++)
-	{
-		glActiveTexture(GL_TEXTURE0 + i);
-		if (textures[i].type == eTextureType::Diffuse)
-		{
-			name = "texture_diffuse" + std::to_string(diffuseNb++);
-		}
-		else if (textures[i].type == eTextureType::Specular)
-		{
-			name = "texture_specular" + std::to_string(specularNb++);
-		}
-		else if (textures[i].type == eTextureType::Cubemap)
-		{
-			name = "cubeMap" + std::to_string(cubeMapNb++);
-		}
-		shader->setInt(name.c_str(), i);
-		if (textures[i].type != eTextureType::Cubemap)
-			glBindTexture(GL_TEXTURE_2D, textures[i].id);
-		else 
-			glBindTexture(GL_TEXTURE_CUBE_MAP, textures[i].id);
-	}
+	Engine42::Engine::GetLights().front()->SendLightToShader(shader);
+	material.SendMaterialToShader(shader);
 
 	glBindVertexArray(_vao);
 	glDrawElements(GL_TRIANGLES, faces.size(), GL_UNSIGNED_INT, 0);
@@ -127,6 +83,3 @@ void	Mesh::Draw(const std::shared_ptr<Shader>  shader) const
 
 	glActiveTexture(GL_TEXTURE0);
 }
-
-bool	Mesh::HasTexture() const { return _hasTexture; }
-void	Mesh::SetHasTexture(bool hasTexture) { _hasTexture = hasTexture; }

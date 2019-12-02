@@ -26,15 +26,16 @@ SRCS_DIR = srcs
 SRCS =  Time.cpp SdlWindow.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp \
 		Engine.cpp  Transform.cpp Skybox.cpp Framebuffer.cpp PostProcess.cpp\
 		AComponent.cpp GameObject.cpp ARenderer.cpp ACollider.cpp\
-		PrintGlm.cpp Font.cpp MeshRenderer.cpp Terrain.cpp AUi.cpp\
+		PrintGlm.cpp Font.cpp MeshRenderer.cpp Terrain.cpp AUi.cpp Material.cpp\
 		BoxColliderRenderer.cpp BoxCollider.cpp NodeAnim.cpp UiButton.cpp \
 		Animation.cpp Node.cpp MusicListener.cpp SoundListener.cpp UiText.cpp \
+		Light.cpp \
 
 HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
 		GameObject.hpp Engine.hpp Transform.hpp Skybox.hpp PostProcess.hpp \
 		AComponent.hpp ACollider.hpp PrintGlm.hpp  MeshRenderer.hpp Terrain.hpp  \
-		Font.hpp ARenderer.hpp BoxCollider.hpp UiText.hpp UiButton.hpp\
-		BoxColliderRenderer.hpp BoxCollider.hpp Model.hpp AUi.hpp\
+		Font.hpp ARenderer.hpp BoxCollider.hpp UiText.hpp UiButton.hpp Light.hpp \
+		BoxColliderRenderer.hpp BoxCollider.hpp Model.hpp AUi.hpp Material.hpp\
 		Camera.hpp NodeAnim.hpp Animation.hpp Node.hpp MusicListener.hpp SoundListener.hpp \
 
 ## Objects ##

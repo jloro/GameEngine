@@ -19,38 +19,31 @@
 # include "glad.h"
 # include "Shader.hpp"
 # include "Vertex.hpp"
-# include "Texture.hpp"
+# include "Material.hpp"
 
 class Mesh
 {
 	public:
 /*  constructors / destructors  */
 		Mesh(void); 
-		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> faces, std::vector<Texture> textures);
-		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> faces, glm::vec3 diffuse, glm::vec3 ambient, glm::vec3 specular);
+		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> faces, Material material);
+		//Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> faces, glm::vec3 diffuse, glm::vec3 ambient, glm::vec3 specular);
 		Mesh(Mesh const & src); 
 		virtual~Mesh();
 /*  public variables  */
 		std::vector<Vertex>			vertices;
 		std::vector<unsigned int>	faces;
-		std::vector<Texture>		textures;
+		Material					material;
 
-		glm::vec3					diffuse;
-		glm::vec3					ambient;
-		glm::vec3					specular;
 /*  public functions  */
 		Mesh &		operator=(Mesh const & rhs);
 		void		Draw(const std::shared_ptr<Shader>  shader) const;
 		void		SendToOpenGL(void);
-
-		bool		HasTexture() const;
-		void		SetHasTexture(bool hasTexture);
 	private:
 /*  private variables  */
 		GLuint						_vao;
 		GLuint						_vbo;
 		GLuint						_ebo;
-		bool						_hasTexture;
 /*  private functions */
 };
 

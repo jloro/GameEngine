@@ -27,7 +27,6 @@ class BoxColliderRenderer : public ARenderer
 	private:
 		std::shared_ptr<Mesh>		_mesh;
 		std::shared_ptr<Shader>		_shader;
-		GameObject*					_go;
 		BoxCollider*					_collider;
 };
 

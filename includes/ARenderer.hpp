@@ -14,6 +14,7 @@ public:
 /*	constructors / destrucors	*/
     ARenderer();
     ARenderer(std::shared_ptr<GameObject> obj);
+    ARenderer(GameObject* obj);
     ARenderer(std::shared_ptr<Shader> shader, GameObject *obj = nullptr);
     ARenderer(std::shared_ptr<Shader> shader, std::shared_ptr<GameObject> obj = std::shared_ptr<GameObject>(nullptr));
     virtual ~ARenderer();

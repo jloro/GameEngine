@@ -2,7 +2,7 @@
 #include "Camera.hpp"
 #include "MeshRenderer.hpp"
 
-BoxColliderRenderer::BoxColliderRenderer(GameObject* obj, BoxCollider* collider) : _go(obj), _collider(collider)
+BoxColliderRenderer::BoxColliderRenderer(GameObject* obj, BoxCollider* collider) : ARenderer(obj), _collider(collider)
 {
 	glm::vec3 min = _collider->center - _collider->size / 2.0f;;
 	glm::vec3 max = _collider->center + _collider->size / 2.0f;;
@@ -30,10 +30,10 @@ BoxColliderRenderer::BoxColliderRenderer(GameObject* obj, BoxCollider* collider)
 		6, 0, 4,
 		4, 0, 2
 	};
-	std::vector<const char *>	shadersPath{ "shaders/Vertex.vs.glsl", "shaders/Collider.fs.glsl"};
+	std::vector<const char *>	shadersPath{ "shaders/Vertex.vs.glsl", "shaders/Assimp.fs.glsl"};
 	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 
-	_shader.reset(new Shader(shadersPath, type));
+	_shader = std::make_shared<Shader>(shadersPath, type);
 	std::vector<Vertex> finalVertices;
 	for (int i = 0; i < 8; i++)
 	{
@@ -41,8 +41,10 @@ BoxColliderRenderer::BoxColliderRenderer(GameObject* obj, BoxCollider* collider)
 		v.position = glm::vec3(vertices[i * 3], vertices[i * 3 + 1], vertices[i * 3 + 2]);
 		finalVertices.push_back(v);
 	}
-	std::vector<Texture> t;
-	_mesh.reset(new Mesh(finalVertices, faces, t));
+	Material mat;
+	mat.SetDiffuse(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+	mat.SetAmbient(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+	_mesh = std::make_shared<Mesh>(finalVertices, faces, mat);
 	_mesh->SendToOpenGL();
 }
 
@@ -50,7 +52,7 @@ BoxColliderRenderer::~BoxColliderRenderer() {}
 
 void	BoxColliderRenderer::Draw() const
 {
-	if (_go->GetComponent<MeshRenderer>()->IsRender())
+	if (_gameObj->GetComponent<MeshRenderer>()->IsRender())
 	{
 		_shader->use();
 		_shader->setMat4("view", Camera::Instance()->GetMatView());

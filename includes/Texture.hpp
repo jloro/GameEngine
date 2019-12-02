@@ -15,14 +15,13 @@
 
 # include "glad.h"
 
-enum eTextureType {Diffuse, Specular, Cubemap};
+enum class eTextureType {Diffuse, Specular, Ambient, Cubemap};
 
 struct Texture 
 {
 	GLuint	id;
 	eTextureType	type;
-    static eTextureType GetEnumType(std::string type);
-    static std::string GetStringType(eTextureType type);
+    std::string path;
 };
 
 #endif

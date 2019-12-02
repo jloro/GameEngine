@@ -5,11 +5,20 @@
 #include <map>
 
 Engine42::Engine          Engine42::Engine::_inst = Engine();
+
+#pragma region Contructor/Destructor
+
 Engine42::Engine::Engine(void){
 	_skybox = nullptr;
 	_clear = false;
 	_tags["Default"] = 1 << 0;
 }
+
+Engine42::Engine::~Engine(void){}
+
+#pragma endregion
+
+#pragma region Keyboard
 
 void	Engine42::Engine::InitKeyboard()
 {
@@ -17,19 +26,34 @@ void	Engine42::Engine::InitKeyboard()
 	for (Uint8 i = 4; i <= 226; i++)
 	{
 		if (_inst._keys[i])
-			_inst._keyboard[i] = KEY_DOWN;
+			_inst._keyboard[i] = eKeyState::KEY_DOWN;
 		else
-			_inst._keyboard[i] = KEY_UP;
+			_inst._keyboard[i] = eKeyState::KEY_UP;
 	}
 }
 
-Engine42::Engine::~Engine(void){}
+const Uint8 *Engine42::Engine::GetKeyInput(){ return _inst._keys;}
 
-void            Engine42::Engine::SetWindow(const SdlWindow *win) {_inst._win = win;}
-void            Engine42::Engine::AddRenderer(std::list<std::shared_ptr<ARenderer>> renderers)
+eKeyState		Engine42::Engine::GetKeyState(Uint8 scancode) { return _inst._keyboard[scancode];}
+
+void	Engine42::Engine::_UpdateKeyboard()
 {
-	_inst._renderers.insert(_inst._renderers.end(), renderers.begin(), renderers.end());
+	for (Uint8 i = 4; i <= 226; i++)
+	{
+		if (_keys[i] && _keyboard[i] == eKeyState::KEY_UP)
+			_keyboard[i] = eKeyState::KEY_PRESS;
+		else if (_keys[i] && _keyboard[i] == eKeyState::KEY_PRESS)
+			_keyboard[i] = eKeyState::KEY_DOWN;
+		else if (!_keys[i] && _keyboard[i] == eKeyState::KEY_DOWN)
+			_keyboard[i] = eKeyState::KEY_RELEASE;
+		else if (!_keys[i] && _keyboard[i] == eKeyState::KEY_RELEASE)
+			_keyboard[i] = eKeyState::KEY_UP;
+	}
 }
+#pragma endregion
+
+#pragma region Add
+
 void            Engine42::Engine::AddRenderer(std::shared_ptr<ARenderer> renderer) 
 {
 	if (renderer != nullptr)
@@ -60,13 +84,43 @@ void            Engine42::Engine::AddGameObject(std::list<std::shared_ptr<GameOb
 	_inst._gameObjs.insert(_inst._gameObjs.begin(), objs.begin(), objs.end());
 }
 
-std::shared_ptr<Font>				Engine42::Engine::GetFontUI() { return _inst._fontUI; }
+void				Engine42::Engine::AddLight(std::shared_ptr<GameObject> light)
+{
+	if (light->GetComponent<Light>() != nullptr)
+	{
+		Engine42::Engine::AddGameObject(light);
+		_inst._lights.push_back(light->GetComponent<Light>());
+	}
+}
 
 void            Engine42::Engine::AddUIElement(std::shared_ptr<AUi> object)
 {
 	if (object != nullptr)
 		_inst._UI.push_back(object);
 }
+
+void            Engine42::Engine::AddRenderer(std::list<std::shared_ptr<ARenderer>> renderers)
+{
+	_inst._renderers.insert(_inst._renderers.end(), renderers.begin(), renderers.end());
+}
+
+#pragma endregion
+
+#pragma region Getters/Setters
+
+std::shared_ptr<Font>				Engine42::Engine::GetFontUI() { return _inst._fontUI; }
+
+void            Engine42::Engine::SetWindow(const SdlWindow *win) {_inst._win = win;}
+
+std::list<const SDL_Event> Engine42::Engine::GetEvents(){ return _inst._events;}
+
+std::list<std::shared_ptr<Light>> & Engine42::Engine::GetLights() { return _inst._lights; }
+
+#pragma endregion
+
+
+
+
 void            Engine42::Engine::ChangeFontUI(std::shared_ptr<Font> font)
 {
 	_inst._fontUI = font;
@@ -80,25 +134,7 @@ void            Engine42::Engine::ResizeWindow(int width, int height)
 	for (auto it = _UI.begin(); it != _UI.end(); it++)
 		(*it)->Resize();
 }
-std::list<const SDL_Event> Engine42::Engine::GetEvents(){ return _inst._events;}
-const Uint8 *Engine42::Engine::GetKeyInput(){ return _inst._keys;}
 
-eKeyState		Engine42::Engine::GetKeyState(Uint8 scancode) { return _inst._keyboard[scancode];}
-
-void	Engine42::Engine::_UpdateKeyboard()
-{
-	for (Uint8 i = 4; i <= 226; i++)
-	{
-		if (_keys[i] && _keyboard[i] == KEY_UP)
-			_keyboard[i] = KEY_PRESS;
-		else if (_keys[i] && _keyboard[i] == KEY_PRESS)
-			_keyboard[i] = KEY_DOWN;
-		else if (!_keys[i] && _keyboard[i] == KEY_DOWN)
-			_keyboard[i] = KEY_RELEASE;
-		else if (!_keys[i] && _keyboard[i] == KEY_RELEASE)
-			_keyboard[i] = KEY_UP;
-	}
-}
 
 void            Engine42::Engine::Clear(void)
 {

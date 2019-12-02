@@ -2,6 +2,7 @@
 
 ARenderer::ARenderer() : AComponent(), _shader(nullptr) {}
 ARenderer::ARenderer(std::shared_ptr<GameObject> obj) : AComponent(obj.get()), _shader(nullptr) {}
+ARenderer::ARenderer(GameObject* obj) : AComponent(obj), _shader(nullptr) {}
 ARenderer::ARenderer(std::shared_ptr<Shader>  shader, std::shared_ptr<GameObject> obj) : AComponent(obj.get()), _shader(shader) { }
 ARenderer::ARenderer(std::shared_ptr<Shader>  shader, GameObject *obj) : AComponent(obj), _shader(shader) {  }
 ARenderer::~ARenderer() {}

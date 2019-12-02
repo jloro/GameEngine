@@ -21,7 +21,7 @@
 # define MOUSE_SENSITIVITY 0.1f
 # define FOV 45.0f
 
-enum eCameraDirection { Forward, Backward, Right, Left, Up, Down};
+enum class eCameraDirection { Forward, Backward, Right, Left, Up, Down};
 
 class Camera : public GameObject, public std::enable_shared_from_this<Camera>
 {

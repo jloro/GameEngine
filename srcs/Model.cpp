@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include "PrintGlm.hpp"
 #include "Engine.hpp"
+#include "Material.hpp"
 
 Model::Model(void)
 {
@@ -277,7 +278,8 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 	aiColor3D diffuse(0.f,0.f,0.f);
 	aiColor3D specular(0.f,0.f,0.f);
 	aiColor3D ambient(0.f,0.f,0.f);
-
+	Material mat;
+	float shininess;
 	//Get vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
@@ -301,19 +303,14 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 		if (_max == glm::vec3(0.0f))
 			_max = vertex.position;
 
-		if (vertex.position.x > _max.x)
-			_max.x = vertex.position.x;
-		if (vertex.position.y > _max.y)
-			_max.y = vertex.position.y;
-		if (vertex.position.z > _max.z)
-			_max.z = vertex.position.z;
+		_max.x = fmax(vertex.position.x, _max.x);
+		_max.y = fmax(vertex.position.y, _max.y);
+		_max.z = fmax(vertex.position.z, _max.z);
 
-		if (vertex.position.x < _min.x)
-			_min.x = vertex.position.x;
-		if (vertex.position.y < _min.y)
-			_min.y = vertex.position.y;
-		if (vertex.position.z < _min.z)
-			_min.z = vertex.position.z;
+		_min.x = fmin(vertex.position.x, _min.x);
+		_min.y = fmin(vertex.position.y, _min.y);
+		_min.z = fmin(vertex.position.z, _min.z);
+
 		vertices.push_back(vertex);
 	}
 	//Get Bones
@@ -334,13 +331,20 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 		material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
 		material->Get(AI_MATKEY_COLOR_SPECULAR, specular);
 		material->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
-		std::vector<Texture> diffuseMaps = _LoadMaterialTexture(material, aiTextureType_DIFFUSE, Diffuse);
-		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+		material->Get(AI_MATKEY_SHININESS, shininess);
+		mat.SetAmbient(ambient);
+		mat.SetDiffuse(diffuse);
+		mat.SetSpecular(specular);
+		mat.SetShininess(shininess);
+		std::vector<Texture> tmp = _LoadMaterialTexture(material, aiTextureType_DIFFUSE, eTextureType::Diffuse);
+		if (tmp.size() != 0)
+			mat.SetDiffuseMap(tmp[0]);
+		tmp = _LoadMaterialTexture(material, aiTextureType_AMBIENT, eTextureType::Ambient);
+		if (tmp.size() != 0)
+			mat.SetAmbientMap(tmp[0]);
 	}
-	if (textures.size() == 0)
-		return Mesh(vertices, faces, glm::vec3(diffuse.r, diffuse.g, diffuse.b), glm::vec3(ambient.r, ambient.g, ambient.b), glm::vec3(specular.r, specular.g, specular.b));
-	else
-		return Mesh(vertices, faces, textures);
+	return Mesh(vertices, faces, mat);
+
 }
 
 std::vector<Texture>	Model::_LoadMaterialTexture(aiMaterial *mat, aiTextureType type, eTextureType typeName)
@@ -356,6 +360,7 @@ std::vector<Texture>	Model::_LoadMaterialTexture(aiMaterial *mat, aiTextureType 
 		else
 			texture.id = _TextureFromFile(str.C_Str(), _scene->mTextures);
 		texture.type = typeName;
+		texture.path = str.C_Str();
 		textures.push_back(texture);
 	}
 	return textures;
@@ -365,6 +370,7 @@ Texture					Model::_LoadSimpleTexture(eTextureType typeName, const std::string p
 	Texture texture;
 	texture.id = _TextureFromFile(path);
 	texture.type = typeName;
+	texture.path = path;
 	return texture;
 }
 

@@ -52,19 +52,19 @@ void 	Camera::Update()
 {
 	if (_freeFlight)
 	{
-		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_W) == KEY_DOWN)
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_W) == eKeyState::KEY_DOWN)
 			Move(eCameraDirection::Forward, Engine42::Time::GetDeltaTime());
-		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_S) == KEY_DOWN)
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_S) == eKeyState::KEY_DOWN)
 			Move(eCameraDirection::Backward, Engine42::Time::GetDeltaTime());
-		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_D) == KEY_DOWN)
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_D) == eKeyState::KEY_DOWN)
 			Move(eCameraDirection::Right, Engine42::Time::GetDeltaTime());
-		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_A) == KEY_DOWN)
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_A) == eKeyState::KEY_DOWN)
 			Move(eCameraDirection::Left, Engine42::Time::GetDeltaTime());
-		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_Q) == KEY_DOWN)
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_Q) == eKeyState::KEY_DOWN)
 			Move(eCameraDirection::Down, Engine42::Time::GetDeltaTime());
-		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_E) == KEY_DOWN)
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_E) == eKeyState::KEY_DOWN)
 			Move(eCameraDirection::Up, Engine42::Time::GetDeltaTime());
-		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_LSHIFT) == KEY_DOWN)
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_LSHIFT) == eKeyState::KEY_DOWN)
 			_sprint = true;
 		else
 			_sprint = false;
@@ -75,17 +75,17 @@ void	Camera::FixedUpdate() {}
 void	Camera::Move(eCameraDirection dir, float deltaTime)
 {
 	float moveSpeed = _sprint ? _moveSpeed * 20 : _moveSpeed;
-	if (dir == Forward)
+	if (dir == eCameraDirection::Forward)
 		_pos += moveSpeed * deltaTime * _dir;
-	else if (dir == Backward)
+	else if (dir == eCameraDirection::Backward)
 		_pos -= moveSpeed * deltaTime * _dir;
-	else if (dir == Right)
+	else if (dir == eCameraDirection::Right)
 		_pos += moveSpeed * deltaTime * _right;
-	else if (dir == Left)
+	else if (dir == eCameraDirection::Left)
 		_pos -= moveSpeed * deltaTime * _right;
-	else if (dir == Up)
+	else if (dir == eCameraDirection::Up)
 		_pos += moveSpeed * deltaTime * _up;
-	else if (dir == Down)
+	else if (dir == eCameraDirection::Down)
 		_pos -= moveSpeed * deltaTime * _up;
 
 	_CalcMatrix();
