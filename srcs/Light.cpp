@@ -19,6 +19,9 @@ void Light::SendLightToShader(std::shared_ptr<Shader> shader) const {
     shader->SetFloat("light.linear", data.linear);
     shader->SetFloat("light.quadratic", data.quadratic);
     shader->SetFloat("light.cutOff", data.cutOff);
+    shader->SetBool("light.isPoint", _type == eLightType::Point);
+    shader->SetBool("light.isDir", _type == eLightType::Directionnal);
+    shader->SetBool("light.isSpot", _type == eLightType::Spot);
 }
 
 eLightType Light::GetLightType() const { return _type; }

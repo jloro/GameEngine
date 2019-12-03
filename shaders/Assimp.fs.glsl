@@ -13,6 +13,7 @@ struct Material {
 	int hasAmbientMap;
 	int hasDiffuseMap;
     float shininess;
+	int type;
 };
 /*
 enum eLightType
@@ -38,6 +39,9 @@ struct LightData
 	float		quadratic;
 	//Spot
 	float		cutOff;
+	int 		isPoint;
+	int 		isDir;
+	int 		isSpot;
 };
 
 uniform Material material;
@@ -59,18 +63,25 @@ void main()
 
 	// diffuse 
 	vec3 norm = normalize(Normal);
-	float diff = max(dot(norm, light.dir), 0.0);
+	vec3 lightDir = normalize(light.pos - Pos) * light.isPoint + normalize(light.dir) * (1 - light.isPoint);
+	float diff = max(dot(norm, lightDir), 0.0);
 	vec3 diffuse = diff * material.diffuse.xyz * light.diffuse * mix(vec3(1.0f), textureDiffuse.rgb, material.hasDiffuseMap);
 
 	// specular
 	vec3 viewDir = normalize(uCamPos - Pos);
-	vec3 reflectDir = reflect(light.dir, norm);  
+	vec3 reflectDir = reflect(lightDir, norm);  
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
 	vec3 specular = spec * material.specular.xyz * light.specular * mix(vec3(1.0f), textureSpecular.rgb, material.hasSpecularMap);  
 
+
+	float distance = length(light.pos - Pos);
+	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
+	
+	ambient *= mix(1.0f, attenuation, light.isPoint);
+	diffuse *= mix(1.0f, attenuation, light.isPoint);
+	specular *= mix(1.0f, attenuation, light.isPoint);
+
 	vec3 result = ambient + diffuse + specular;
 
-	vec4 color = vec4(result, 1.0);
-	float stepVal = step(material.hasDiffuseMap, 0);
-	FragColor =  color;
+	FragColor =  vec4(result, 1.0);
 } 

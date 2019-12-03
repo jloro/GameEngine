@@ -24,7 +24,7 @@ Material::Material()
     _ambientMap.type = eTextureType::Ambient;
     _specularMap.type = eTextureType::Specular;
     _diffuseMap.type = eTextureType::Diffuse;
-    _mat.ambient = glm::vec4(0.0f);
+    _mat.ambient = glm::vec4(0.2f);
     _mat.diffuse = glm::vec4(1.0f);
     _mat.specular = glm::vec4(0.0f);
     _mat.shininess = 1.0f;
