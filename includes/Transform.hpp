@@ -24,6 +24,7 @@ struct Transform
     std::shared_ptr<Transform> parent;
     virtual glm::mat4       GetLocalMatrix(void) const;
     virtual glm::mat4       GetMatrix(void) const;
+    virtual glm::mat3       GetModelNormal() const;
     virtual void            SetLocalMatrix(glm::mat4 matrix);
     virtual void            UpdateMatrix(void);
 	virtual	glm::vec3		GetWorldPos(void) const;
@@ -36,7 +37,8 @@ struct Transform
     glm::mat4                  _localMatrix;
     private :
         void    _Initialize(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale, std::shared_ptr<Transform> parent = nullptr);
-};
+        glm::mat3 _modelNormal;
+}; 
 #endif
 
 std::ostream &	operator<< (std::ostream & o, const Transform & rhs);

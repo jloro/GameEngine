@@ -39,6 +39,7 @@ void    Transform::_Initialize(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale, st
     this->parent = parent;
     UpdateMatrix();
 }
+
 void    Transform::UpdateMatrix()
 {
     _localMatrix = glm::mat4(1.0f);
@@ -47,6 +48,7 @@ void    Transform::UpdateMatrix()
     _localMatrix = glm::rotate(_localMatrix, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     _localMatrix = glm::rotate(_localMatrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     _localMatrix = glm::scale(_localMatrix, scale);
+    _modelNormal = glm::inverse(glm::mat3(_localMatrix));
 }
 glm::mat4       Transform::GetLocalMatrix(void) const
 {
@@ -70,6 +72,13 @@ glm::mat4       Transform::GetMatrix(void) const
         return parent->GetMatrix() * _localMatrix;
     return _localMatrix ;
 }
+glm::mat3       Transform::GetModelNormal() const
+{
+    if (parent != nullptr)
+        return parent->GetModelNormal() * _modelNormal;
+    return _modelNormal ;
+}
+
 void            Transform::SetLocalMatrix(glm::mat4 matrix)
 {
     _localMatrix = matrix;

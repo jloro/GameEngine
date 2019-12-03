@@ -46,6 +46,7 @@ void        MeshRenderer::Draw(void) const
 		_shader->setMat4("view", Camera::Instance()->GetMatView());
 		_shader->setMat4("projection", Camera::Instance()->GetMatProj());
 		_shader->setMat4("model", _transform->GetMatrix());
+		_shader->setMat3("modelNormal", _transform->GetModelNormal());
 		_model->Draw(_shader);
 	}
 }
