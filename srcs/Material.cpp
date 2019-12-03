@@ -93,26 +93,26 @@ void Material::SendMaterialToShader(std::shared_ptr<Shader> shader) const {
     glActiveTexture(GL_TEXTURE0 + i);
     if (_mat.hasAmbientMap)
     {
-        shader->setInt("texture_ambient", i++);
+        shader->SetInt("texture_ambient", i++);
         glBindTexture(GL_TEXTURE_2D, _ambientMap.id);
     }
     if (_mat.hasDiffuseMap)
     {
-        shader->setInt("texture_diffuse", i++);
+        shader->SetInt("texture_diffuse", i++);
         glBindTexture(GL_TEXTURE_2D, _diffuseMap.id);
     }
     if (_mat.hasSpecularMap)
     {
-        shader->setInt("texture_specular", i++);
+        shader->SetInt("texture_specular", i++);
         glBindTexture(GL_TEXTURE_2D, _specularMap.id);
     }
-    shader->setVec4("material.diffuse", _mat.diffuse);
-    shader->setVec4("material.specular", _mat.specular);
-    shader->setVec4("material.ambient", _mat.ambient);
-    shader->setFloat("material.shininess", _mat.shininess);
-    shader->setBool("material.hasAmbientMap", _mat.hasAmbientMap);
-    shader->setBool("material.hasDiffuseMap", _mat.hasDiffuseMap);
-    shader->setBool("material.hasSpecularMap", _mat.hasSpecularMap);
+    shader->SetVec4("material.diffuse", _mat.diffuse);
+    shader->SetVec4("material.specular", _mat.specular);
+    shader->SetVec4("material.ambient", _mat.ambient);
+    shader->SetFloat("material.shininess", _mat.shininess);
+    shader->SetBool("material.hasAmbientMap", _mat.hasAmbientMap);
+    shader->SetBool("material.hasDiffuseMap", _mat.hasDiffuseMap);
+    shader->SetBool("material.hasSpecularMap", _mat.hasSpecularMap);
 }
 #pragma endregion
 

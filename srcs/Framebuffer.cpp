@@ -83,9 +83,9 @@ void	Framebuffer::Draw(void) const
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _colorBuffer);
 	_shaderModel->use();
-    _shaderModel->setMat4("view", Camera::Instance()->GetMatView());
-    _shaderModel->setMat4("projection", Camera::Instance()->GetMatProj());
-    _shaderModel->setMat4("model", _transform->GetMatrix());
-	_shaderModel->setInt("texture_diffuse0", 0);
+    _shaderModel->SetMat4("view", Camera::Instance()->GetMatView());
+    _shaderModel->SetMat4("projection", Camera::Instance()->GetMatProj());
+    _shaderModel->SetMat4("model", _transform->GetMatrix());
+	_shaderModel->SetInt("texture_diffuse0", 0);
 	_model->Draw(_shaderModel);
 }

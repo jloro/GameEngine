@@ -10,9 +10,9 @@ PostProcess::PostProcess(std::vector<const char *> shaderSource, std::vector<GLe
 void	PostProcess::use(void) const
 {
 	glUseProgram(_program);
-	setInt("uEffect", _effect);
-	setMat3("uKernel", _kernel);
-	setFloat("uOffset", 1 /_offset);
+	SetInt("uEffect", _effect);
+	SetMat3("uKernel", _kernel);
+	SetFloat("uOffset", 1 /_offset);
 }
 
 PostProcess::~PostProcess() {}

@@ -35,6 +35,7 @@ namespace Engine42
 
 			/*	public variables	*/
 			/*	public functions	*/
+			static void	SetUp();
 			static void            AddRenderer(std::list<std::shared_ptr<ARenderer>> renderers);
 			static void            AddRenderer(std::shared_ptr<ARenderer> renderer);
 			static void            AddFramebuffer(std::shared_ptr<Framebuffer>  fbo);

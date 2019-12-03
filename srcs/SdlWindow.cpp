@@ -1,4 +1,5 @@
 #include "SdlWindow.hpp"
+#include "Engine.hpp"
 SdlWindow      *SdlWindow::_mainWin = nullptr;
 
 SdlWindow::SdlWindow(int width, int height, bool isRenderer, bool isOpenGl, std::string name)
@@ -50,6 +51,8 @@ void    SdlWindow::CreateGlContext(int majVersion, int minVersion, bool doublebu
     {
         throw std::runtime_error("fail to load Glad functions");
     }
+    Engine42::Engine::SetUp();
+
 }
 void       SdlWindow::Swap(void) const
 {

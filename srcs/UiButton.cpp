@@ -96,10 +96,10 @@ UiButton::~UiButton() {}
 void	UiButton::Draw() const
 {
 	_shader->use();
-	_shader->setVec4("color", color);
-	_shader->setMat4("projection", _proj);
-	_shader->setInt("uHasImage", static_cast<int>(_hasImage));
-	_shader->setInt("tex", 0);
+	_shader->SetVec4("color", color);
+	_shader->SetMat4("projection", _proj);
+	_shader->SetInt("uHasImage", static_cast<int>(_hasImage));
+	_shader->SetInt("tex", 0);
 	glBindVertexArray(_vao);
 	if (_hasImage)
 		glBindTexture(GL_TEXTURE_2D, _textureId);

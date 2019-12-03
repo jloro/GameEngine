@@ -14,7 +14,7 @@ Font::Font(const std::string font, int pixelSize) : _pixelSize(pixelSize)
 	if (!ifs.is_open())
 		throw std::runtime_error(std::string("Error while opening file: ") + font);
 	_proj = glm::ortho(0.0f, (float)SdlWindow::GetMain()->GetWidth(), 0.0f, (float)SdlWindow::GetMain()->GetHeight());
-	std::vector<const char *>	shadersPath{"shaders/Text.vs.glsl", "shaders/Text.fs.glsl"};
+	std::vector<const char *>	shadersPath{"Text.vs.glsl", "Text.fs.glsl"};
 	std::vector<GLenum> type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 	_shader.reset(new Shader(shadersPath, type));
 
@@ -91,10 +91,10 @@ void	Font::RenderText(const std::string text, float x, float y, float scale, glm
 {
 	GLfloat x2, y2, w, h;
 	_shader->use();
-	_shader->setFloat("smoothing", 0.1f / scale);
-	_shader->setVec4("color", color);
-	_shader->setInt("tex", 0);
-	_shader->setMat4("projection", _proj);
+	_shader->SetFloat("smoothing", 0.1f / scale);
+	_shader->SetVec4("color", color);
+	_shader->SetInt("tex", 0);
+	_shader->SetMat4("projection", _proj);
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(_vao);
 	for (std::string::const_iterator it = text.begin(); it != text.end(); it++)

@@ -118,7 +118,15 @@ std::list<std::shared_ptr<Light>> & Engine42::Engine::GetLights() { return _inst
 
 #pragma endregion
 
+void			Engine42::Engine::SetUp()
+{
+	std::vector<const char *>	shadersPath{ "Skeletical.vs.glsl", "Assimp.fs.glsl"};
+	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 
+	Shader::skeletal = std::make_shared<Shader>(shadersPath, type);
+	shadersPath[0] = "Vertex.vs.glsl";
+	Shader::standard = std::make_shared<Shader>(shadersPath, type);
+}
 
 
 void            Engine42::Engine::ChangeFontUI(std::shared_ptr<Font> font)
@@ -198,7 +206,7 @@ void            Engine42::Engine::createFBO(void)
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
-	std::vector<const char *>	shadersPath{"shaders/Color.vs.glsl", "shaders/Color.fs.glsl"};
+	std::vector<const char *>	shadersPath{"Color.vs.glsl", "Color.fs.glsl"};
 	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 	_inst._shaderFbo = std::make_shared<Shader>(shadersPath, type);
 }
@@ -320,10 +328,10 @@ void                         Engine42::Engine::_RenderAll(void)
 	glDisable(GL_DEPTH_TEST);
 
 	_shaderFbo->use();
-	_shaderFbo->setMat4("projection", glm::mat4(1.0f));
-	_shaderFbo->setInt("uHasImage", true);
-	_shaderFbo->setVec4("color", glm::vec4(1.0f));
-	_shaderFbo->setInt("tex", 0);
+	_shaderFbo->SetMat4("projection", glm::mat4(1.0f));
+	_shaderFbo->SetInt("uHasImage", true);
+	_shaderFbo->SetVec4("color", glm::vec4(1.0f));
+	_shaderFbo->SetInt("tex", 0);
 	glBindVertexArray(_quadVAO);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _colorBuffer);

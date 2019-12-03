@@ -149,7 +149,7 @@ void	Model::_BoneTransform(float timeInSecond, const std::shared_ptr<Shader>  sh
 	std::vector<glm::mat4>	Transform;
 	for (unsigned int i = 0; i < _boneInfo.size(); i++)
 		Transform.push_back(_boneInfo[i].finalTransMat);
-	shader->setMat4v("gBones", Transform);
+	shader->SetMat4v("gBones", Transform);
 }
 
 std::shared_ptr<NodeAnim> FindNodeAnim(std::shared_ptr<Animation> anim, const std::string nodeName)

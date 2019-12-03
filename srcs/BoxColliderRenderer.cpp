@@ -30,10 +30,7 @@ BoxColliderRenderer::BoxColliderRenderer(GameObject* obj, BoxCollider* collider)
 		6, 0, 4,
 		4, 0, 2
 	};
-	std::vector<const char *>	shadersPath{ "shaders/Vertex.vs.glsl", "shaders/Assimp.fs.glsl"};
-	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
-
-	_shader = std::make_shared<Shader>(shadersPath, type);
+	_shader = Shader::standard;
 	std::vector<Vertex> finalVertices;
 	for (int i = 0; i < 8; i++)
 	{
@@ -55,9 +52,9 @@ void	BoxColliderRenderer::Draw() const
 	if (_gameObj->GetComponent<MeshRenderer>()->IsRender())
 	{
 		_shader->use();
-		_shader->setMat4("view", Camera::Instance()->GetMatView());
-		_shader->setMat4("projection", Camera::Instance()->GetMatProj());
-		_shader->setMat4("model", glm::scale(_transform->GetMatrix(), _collider->scale));
+		_shader->SetMat4("view", Camera::Instance()->GetMatView());
+		_shader->SetMat4("projection", Camera::Instance()->GetMatProj());
+		_shader->SetMat4("model", glm::scale(_transform->GetMatrix(), _collider->scale));
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		_mesh->Draw(_shader);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
