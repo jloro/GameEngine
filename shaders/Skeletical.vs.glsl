@@ -25,7 +25,7 @@ void main()
 	TexCoords = atexCoord;
 	Normal = modelNormal * mat3(boneTransform) * aNormal;
 	gl_Position = projection * view * model * boneTransform * vec4(aPos, 1.0f);
-	Pos = mat3(model) * mat3(boneTransform) * aPos;
+	Pos = vec3(model * boneTransform * vec4(aPos, 1.0f));
 ;
 
 }

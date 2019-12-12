@@ -161,6 +161,8 @@ std::ostream & operator<<(std::ostream & o, Material const & rhs)
 
     if (data.hasDiffuseMap)
         o << "DiffuseMap: " << rhs.GetDiffuseMap().path << std::endl;
+    if (data.hasAmbientMap)
+        o << "AmbientMap: " << rhs.GetAmbientMap().path << std::endl;
 
    // o << "Material data: " << std::endl;
 

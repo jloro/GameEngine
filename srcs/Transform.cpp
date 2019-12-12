@@ -48,7 +48,7 @@ void    Transform::UpdateMatrix()
     _localMatrix = glm::rotate(_localMatrix, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     _localMatrix = glm::rotate(_localMatrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     _localMatrix = glm::scale(_localMatrix, scale);
-    _modelNormal = glm::inverse(glm::mat3(_localMatrix));
+    _modelNormal = glm::transpose(glm::inverse(glm::mat3(_localMatrix)));
 }
 glm::mat4       Transform::GetLocalMatrix(void) const
 {

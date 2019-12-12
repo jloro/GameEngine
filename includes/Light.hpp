@@ -19,6 +19,8 @@ struct LightData
 	glm::vec3	diffuse;
 	glm::vec3	specular;
 
+	float		power;
+	
 	//Spot, point
 	glm::vec3	pos;
 	//Directionnal, Spot

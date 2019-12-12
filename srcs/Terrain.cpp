@@ -93,6 +93,8 @@ bool    Terrain::LoadTexture(const std::string & path)
 {
     _dir  = path.substr(0, path.find_last_of('/'));
     _meshes[0].material.SetDiffuseMap(Model::_LoadSimpleTexture(eTextureType::Diffuse ,path));
+    _meshes[0].material.SetAmbient(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
+
     return true;
 }   
 bool Terrain::LoadTexture(const std::string &path, float tilingX, float tilingY)
@@ -100,6 +102,7 @@ bool Terrain::LoadTexture(const std::string &path, float tilingX, float tilingY)
     _tilingX = tilingX;
     _tilingY = tilingY;
     _dir  = path.substr(0, path.find_last_of('/'));
+    _meshes[0].material.SetAmbient(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
     _meshes[0].material.SetDiffuseMap(Model::_LoadSimpleTexture(eTextureType::Diffuse ,path));
     return true;
 }

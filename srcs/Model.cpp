@@ -107,6 +107,7 @@ const std::shared_ptr<Animation>	Model::GetAnimation(std::string name) { return 
 
 void	Model::_LoadModel(std::string path)
 {
+	//std::cout << path << std::endl;
 	_playing = true;
 	_scene = _importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 	_min = glm::vec3(0.0f);
@@ -339,9 +340,10 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 		std::vector<Texture> tmp = _LoadMaterialTexture(material, aiTextureType_DIFFUSE, eTextureType::Diffuse);
 		if (tmp.size() != 0)
 			mat.SetDiffuseMap(tmp[0]);
-		tmp = _LoadMaterialTexture(material, aiTextureType_AMBIENT, eTextureType::Ambient);
-		if (tmp.size() != 0)
-			mat.SetAmbientMap(tmp[0]);
+	//	tmp = _LoadMaterialTexture(material, aiTextureType_AMBIENT, eTextureType::Ambient);
+	//	if (tmp.size() != 0)
+		//	mat.SetAmbientMap(tmp[0].path, tmp[0].id);
+		//std::cout << mat << std::endl;
 	}
 	return Mesh(vertices, faces, mat);
 

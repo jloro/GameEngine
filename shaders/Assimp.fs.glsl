@@ -15,19 +15,14 @@ struct Material {
     float shininess;
 	int type;
 };
-/*
-enum eLightType
-{
-	Directionnal = 0,
-	Point = 1,
-	Spot = 2
-};
-*/
+
 struct LightData
 {
 	vec3	ambient;
 	vec3	diffuse;
 	vec3	specular;
+
+	float power;
 
 	//Spot, point
 	vec3	pos;
@@ -50,7 +45,6 @@ uniform sampler2D	texture_diffuse;
 uniform sampler2D	texture_ambient;
 uniform sampler2D	texture_specular;
 uniform	vec3		uCamPos;
-uniform mat4 model;
 
 void main()
 {
@@ -59,20 +53,25 @@ void main()
 	vec4 textureSpecular = texture(texture_specular, TexCoords);
 
 	// ambient
-	vec3 ambient =  material.ambient.xyz * light.ambient * mix(vec3(1.0f), textureAmbient.rgb, material.hasAmbientMap);
+	vec3 ambient =  material.ambient.xyz * light.ambient * mix(vec3(1.0f), textureDiffuse.rgb, material.hasDiffuseMap);
 
 	// diffuse 
 	vec3 norm = normalize(Normal);
-	vec3 lightDir = normalize(light.pos - Pos) * light.isPoint + normalize(light.dir) * (1 - light.isPoint);
-	float diff = max(dot(norm, lightDir), 0.0);
-	vec3 diffuse = diff * material.diffuse.xyz * light.diffuse * mix(vec3(1.0f), textureDiffuse.rgb, material.hasDiffuseMap);
+	vec3 lightDir = normalize(light.pos - Pos) * (light.isPoint + light.isSpot) + normalize(light.dir) * (1 - light.isPoint - light.isSpot);
+	float diff = min(max(dot(norm, lightDir), 0.0), 1.0f);
+	vec3 diffuse = diff * light.power * material.diffuse.xyz * light.diffuse * mix(vec3(1.0f), textureDiffuse.rgb, material.hasDiffuseMap);
 
+	float theta = dot(normalize(light.pos - Pos), normalize(light.dir));
+	if (theta < light.cutOff && light.isSpot == 1)
+	{
+		FragColor = vec4(light.ambient * material.diffuse.xyz * mix(vec3(1.0f), textureDiffuse.rgb, material.hasDiffuseMap), 1.0f);
+		return;
+	}
 	// specular
 	vec3 viewDir = normalize(uCamPos - Pos);
 	vec3 reflectDir = reflect(lightDir, norm);  
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
 	vec3 specular = spec * material.specular.xyz * light.specular * mix(vec3(1.0f), textureSpecular.rgb, material.hasSpecularMap);  
-
 
 	float distance = length(light.pos - Pos);
 	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
